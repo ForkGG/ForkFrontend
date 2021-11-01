@@ -4,6 +4,9 @@ bin
 obj
 UpgradeLog.htm
 *.html
-NihilusInstaller
 *.user
 Properties/PublishProfiles
+Shared/*.css
+Shared/*.css.map
+Pages/*.css
+Pages/*.css.map
