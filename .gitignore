@@ -10,3 +10,7 @@ Shared/*.css
 Shared/*.css.map
 Pages/*.css
 Pages/*.css.map
+Shared/*/*.css
+Shared/*/*.css.map
+Pages/*/*.css
+Pages/*/*.css.map
