@@ -1,0 +1,30 @@
+﻿@import "../colors";
+
+.navbar {
+  background-color: $fork-ultra-light;
+  display: flex;
+  justify-content: flex-start;
+  padding: 0;
+
+  nav {
+    flex-grow: 1;
+    display: flex;
+    justify-content: flex-start;
+
+    .nav-item {
+      padding: 10px 15px;
+
+      ::deep a {
+        color: red;
+
+        :hover {
+          color: blue;
+        }
+
+        .active {
+          color: green;
+        }
+      }
+    }
+  }
+}
