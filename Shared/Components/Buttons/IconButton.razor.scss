@@ -1,0 +1,26 @@
+﻿@import "../../../wwwroot/css/colors";
+
+.icon-button {
+  clip-path: polygon(0 0, 100% 0, 100% 66%, 66% 100%, 0 100%);
+  background-color: $fork-label;
+  display: flex;
+  cursor: pointer;
+
+  &:hover {
+    color: $fork-heading-focus;
+  }
+
+  span {
+    margin: auto;
+    padding: 0 2px 2px 0;
+  }
+}
+
+@font-face {
+  font-family: "icomoon";
+  src: url("ressources/fonts/icons.ttf");
+}
+
+.icon {
+  font-family: "icomoon";
+}

@@ -6,11 +6,5 @@ UpgradeLog.htm
 *.html
 *.user
 Properties/PublishProfiles
-Shared/*.css
-Shared/*.css.map
-Pages/*.css
-Pages/*.css.map
-Shared/**/*.css
-Shared/**/*.css.map
-Pages/**/*.css
-Pages/**/*.css.map
+*.css
+*.css.map

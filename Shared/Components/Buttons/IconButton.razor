@@ -1,0 +1,19 @@
+﻿<div class="icon-button" style="@SizeString">
+    <span class="icon" style="font-size: @IconSizeString">@IconChar</span>
+</div>
+
+@code {
+
+    [Parameter]
+    public char IconChar { get; set; }
+
+    [Parameter]
+    public int IconSize { get; set; }
+
+    private string IconSizeString => $"{IconSize}px;";
+
+    [Parameter]
+    public int Size { get; set; }
+
+    private string SizeString => $"width: {Size}px; height: {Size}px;";
+}

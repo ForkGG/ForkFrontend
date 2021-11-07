@@ -1,29 +1,28 @@
-﻿@import "../colors";
+﻿@import "../../wwwroot/css/colors";
 
 .navbar {
-  background-color: $fork-ultra-light;
+  background-color: $fork-light;
   display: flex;
   justify-content: flex-start;
   padding: 0;
 
   nav {
+    margin-left: 20px;
     flex-grow: 1;
     display: flex;
     justify-content: flex-start;
 
-    .nav-item {
+    .nav-item ::deep a {
       padding: 10px 15px;
+      color: $fork-heading;
 
-      ::deep a {
-        color: red;
+      &:hover {
+        color: $fork-heading-focus;
+      }
 
-        :hover {
-          color: blue;
-        }
-
-        .active {
-          color: green;
-        }
+      &.active {
+        color: $fork-heading-focus;
+        border-bottom: 2px solid $fork-blue;
       }
     }
   }

@@ -1,8 +1,10 @@
-﻿@import "colors";
+﻿@import "../wwwroot/css/colors";
 
 .main {
   width: 100%;
   height: 100vh;
+  display: flex;
+  flex-direction: column;
   background-color: $fork-background;
 
   .logo {
@@ -13,13 +15,16 @@
 
   .content {
     display: flex;
+    flex-grow: 1;
+    margin: 30px; //TODO CKE apply design
 
     .sidebar {
-      width: 200px;
+      width: 300px;
     }
 
     .body {
       flex-grow: 1;
+      margin-left: 20px;
     }
   }
 }

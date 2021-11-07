@@ -1,0 +1,29 @@
+﻿@import "../../wwwroot/css/colors";
+
+.sidebar {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  .server-list {
+    flex-grow: 1;
+    background-color: $fork-light;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    .servers {
+
+    }
+
+    .controls {
+      display: flex;
+      justify-content: flex-end;
+      margin: 15px;
+
+      ::deep div {
+        margin: 0 5px;
+      }
+    }
+  }
+}
