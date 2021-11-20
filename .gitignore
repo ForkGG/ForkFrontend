@@ -8,3 +8,4 @@ UpgradeLog.htm
 Properties/PublishProfiles
 *.css
 *.css.map
+node_modules

@@ -25,13 +25,11 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Include="wwwroot\css\colors.css" />
-        <None Include="wwwroot\css\colors.css.map" />
-        <None Include="wwwroot\css\colors.scss" />
+        <ProjectReference Include="..\ProjectAveryCommon\ProjectAveryCommon.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <ProjectReference Include="..\ProjectAveryCommon\ProjectAveryCommon.csproj" />
-    </ItemGroup>
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+        <Exec Command="npm run buildcss" />
+    </Target>
 
 </Project>
