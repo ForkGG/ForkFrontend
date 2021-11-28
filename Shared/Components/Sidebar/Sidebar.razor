@@ -1,0 +1,31 @@
+﻿<div class="w-80 flex flex-col text-label">
+    @* Part over server list *@
+    <div class="bg-forkBlue flex py-2 px-4 items-center">
+        <div class="flex-1 flex flex-col">
+            <span class="text-md leading-none">v1.0.0</span>
+            <span class="text-xs">You are up to date</span>
+        </div>
+        @* TODO only show if update privilege is granted *@
+        @if (true)
+        {
+            <span class="icon">r</span>
+        }
+    </div>
+
+    @* Server List *@
+    <div class="bg-forkBlue-light flex-1 mt-5 flex flex-col">
+        @* Server *@
+        <div class="flex-1">
+            @foreach (var entity in Entities)
+            {
+                <Entity Value="@entity"></Entity>
+            }
+        </div>
+
+        @* Controls *@
+        <div class="flex justify-end">
+            <IconButton IconChar="'I'" IconSize="19" Size="45"></IconButton>
+            <IconButton IconChar="'C'" IconSize="19" Size="45"></IconButton>
+        </div>
+    </div>
+</div>

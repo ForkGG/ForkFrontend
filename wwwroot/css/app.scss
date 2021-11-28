@@ -3,6 +3,10 @@
 @tailwind utilities;
 
 @layer base {
+  body {
+    font-family: Montserrat, sans-serif;
+  }
+
   .navbar a {
     @apply text-label;
     @apply hover:text-label-hover;
@@ -10,6 +14,14 @@
     &.active {
       @apply text-label-hover;
     }
+  }
+
+  @font-face {
+    font-family: "icomoon";
+    src: url("/ressources/fonts/icons.ttf");
+  }
+  .icon {
+    font-family: "icomoon", sans-serif;
   }
 }
 

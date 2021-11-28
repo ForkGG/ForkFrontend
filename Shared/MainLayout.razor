@@ -1,16 +1,14 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="main w-screen h-screen bg-forkBlue-dark">
+<div class="w-screen h-screen bg-forkBlue-dark flex flex-col">
     <Navbar/>
 
     @* Content *@
-    <div class="content">
+    <div class="flex flex-1 mx-6 my-10 gap-4">
         @* Sidebar *@
-        <div class="sidebar">
-            <Sidebar/>
-        </div>
+        <Sidebar/>
         @* Body *@
-        <div class="body">
+        <div class="flex-1">
             @Body
         </div>
     </div>

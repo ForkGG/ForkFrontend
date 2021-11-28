@@ -6,9 +6,20 @@ module.exports = {
             './**/*.razor',
             './**/*.razor.css'
         ],
+        safelist: [
+            'active'
+        ]
     },
     darkMode: false, // or 'media' or 'class'
     theme: {
+        fontSize: {
+            'xs': '8pt',
+            'sm': '10pt',
+            'md': '12pt',
+            'base': '12pt',
+            'lg': '16px',
+            'xl': '32px'
+        },
         colors: {
             transparent: 'transparent',
             current: 'currentColor',
@@ -27,8 +38,8 @@ module.exports = {
     },
     variants: {
         extend: {
-            backgroundColor: ['active'],
-            textColor: ['active']
+            //backgroundColor: ['active'],
+            //textColor: ['active']
         },
     },
     plugins: [],

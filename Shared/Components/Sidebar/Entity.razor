@@ -1,0 +1,19 @@
+﻿@using ProjectAveryCommon.Model.Entity.Pocos
+<div class="w-full flex text-label">
+    @* Status *@
+    <div>l</div>
+    @* Icon *@
+    @* Content *@
+    <div class="flex-1">
+        <p>@Value.Name</p>
+        <p>0/100</p>
+    </div>
+    @* Selected Indicator *@
+</div>
+
+@code {
+
+    [Parameter]
+    public IEntity Value { get; set; }
+
+}

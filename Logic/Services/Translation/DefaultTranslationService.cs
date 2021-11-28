@@ -55,7 +55,7 @@ public class DefaultTranslationService : ITranslationService
         catch (Exception e)
         {
             _logger.LogError($"Property missing in translation file: {variable}");
-            throw;
+            return variable;
         }
     }
 }
