@@ -1,11 +1,13 @@
 ﻿using ProjectAveryCommon.ExtensionMethods;
 using ProjectAveryCommon.Model.Application;
+using ProjectAveryFrontend.Logic.Services.HttpsClients;
 
-namespace ProjectAveryFrontend.Logic.Services;
+namespace ProjectAveryFrontend.Logic.Services.Connections;
 
 public class ApplicationConnectionService : AbstractConnectionService, IApplicationConnectionService
 {
-    public ApplicationConnectionService(ILogger<ApplicationConnectionService> logger, HttpClient client) : base(logger,
+    public ApplicationConnectionService(ILogger<ApplicationConnectionService> logger, BackendClient client) : base(
+        logger,
         client)
     {
     }

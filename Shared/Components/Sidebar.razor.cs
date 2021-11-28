@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using ProjectAveryCommon.Model.Application;
 using ProjectAveryCommon.Model.Entity.Pocos;
-using ProjectAveryFrontend.Logic.Services;
+using ProjectAveryFrontend.Logic.Services.Connections;
 
 namespace ProjectAveryFrontend.Shared.Components;
 

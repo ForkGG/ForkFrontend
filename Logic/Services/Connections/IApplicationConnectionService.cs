@@ -1,6 +1,6 @@
 ﻿using ProjectAveryCommon.Model.Application;
 
-namespace ProjectAveryFrontend.Logic.Services;
+namespace ProjectAveryFrontend.Logic.Services.Connections;
 
 public interface IApplicationConnectionService
 {
