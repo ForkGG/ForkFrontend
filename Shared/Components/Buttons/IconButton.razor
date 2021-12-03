@@ -1,19 +1,37 @@
-﻿<div style="@SizeString">
+﻿<div style="@SizeString" class="icon-button cursor-pointer hover:text-label-hover @(NoBackground ? "text-text" : "text-text-dark bg-button") flex justify-center items-center" @onclick="ClickHandler">
     <span class="icon" style="font-size: @IconSizeString">@IconChar</span>
 </div>
 
 @code {
 
     [Parameter]
+    [EditorRequired]
     public char IconChar { get; set; }
 
     [Parameter]
+    [EditorRequired]
     public int IconSize { get; set; }
 
     private string IconSizeString => $"{IconSize}px;";
 
     [Parameter]
-    public int Size { get; set; }
+    [EditorRequired]
+    public EventCallback<IconButton> OnClickMethod { get; set; }
 
-    private string SizeString => $"width: {Size}px; height: {Size}px;";
+    [Parameter]
+    public int? Size { get; set; }
+
+    [Parameter]
+    public bool NoBackground { get; set; } = false;
+
+    private string SizeString => Size.HasValue ? $"width: {Size}px; height: {Size}px;" : "";
+
+    private async Task ClickHandler()
+    {
+        if (OnClickMethod.HasDelegate)
+        {
+            await OnClickMethod.InvokeAsync(this);
+        }
+    }
+
 }

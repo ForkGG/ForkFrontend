@@ -1,3 +1,5 @@
+const plugin = require('tailwindcss/plugin')
+
 module.exports = {
     purge: {
         enabled: true,
@@ -32,7 +34,17 @@ module.exports = {
                 DEFAULT: '#626684',
                 hover: '#E2E3E9',
                 selected: '#E2E3E9',
-            }
+            },
+            text: {
+                dark: '#1F2234',
+                DEFAULT: '#A3A8C1',
+                red: '#CE5050',
+                orange: '#CEA150',
+                green: '#50CE61'
+            },
+            button: {
+                DEFAULT: '#575C82'
+            },
         },
         extend: {},
     },
