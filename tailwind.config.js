@@ -1,8 +1,6 @@
-const plugin = require('tailwindcss/plugin')
-
 module.exports = {
     purge: {
-        enabled: true,
+        enabled: false,
         content: [
             './**/*.html',
             './**/*.razor',
@@ -20,7 +18,9 @@ module.exports = {
             'md': '12pt',
             'base': '12pt',
             'lg': '16px',
-            'xl': '32px'
+            'xl': '20px',
+            '2xl': '24px',
+            '3xl': '32px'
         },
         colors: {
             transparent: 'transparent',
@@ -28,15 +28,18 @@ module.exports = {
             forkBlue: {
                 dark: '#151622',
                 DEFAULT: '#1D2030',
-                light: '#292C3D'
+                light: '#292C3D',
+                hover: '#2C3358',
+                highlighted: '#374FC3',
             },
             label: {
-                DEFAULT: '#626684',
+                DEFAULT: '#575C82',
                 hover: '#E2E3E9',
                 selected: '#E2E3E9',
             },
             text: {
-                dark: '#1F2234',
+                darkest: '#1F2234',
+                dark: '#575C82',
                 DEFAULT: '#A3A8C1',
                 red: '#CE5050',
                 orange: '#CEA150',
@@ -45,6 +48,12 @@ module.exports = {
             button: {
                 DEFAULT: '#575C82'
             },
+            status: {
+                inactive: '#575C82',
+                orange: '#CEA150',
+                green: '#50CE61',
+                red: '#CE5050'
+            }
         },
         extend: {},
     },

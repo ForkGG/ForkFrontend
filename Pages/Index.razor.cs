@@ -1,18 +1,21 @@
-﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components;
 using ProjectAveryCommon.Model.Application;
 using ProjectAveryCommon.Model.Entity.Pocos;
 using ProjectAveryFrontend.Logic.Services.Connections;
 
-namespace ProjectAveryFrontend.Shared.Components.Sidebar;
+namespace ProjectAveryFrontend.Pages;
 
-public partial class Sidebar : ComponentBase
+// This Page controls the whole entity logic
+public partial class Index : ComponentBase
 {
-    public Sidebar()
+    public Index()
     {
         Entities = new List<IEntity>();
     }
 
     [Inject] private IApplicationConnectionService ApplicationConnection { get; set; }
+
+    public IEntity? SelectedEntity { get; set; }
 
     private List<IEntity> Entities { get; set; }
 
@@ -21,6 +24,12 @@ public partial class Sidebar : ComponentBase
         await Task.Delay(1000);
         State state = await ApplicationConnection.GetApplicationState();
         Entities = new List<IEntity>(state.Entities);
+        SelectedEntity = Entities.FirstOrDefault();
         StateHasChanged();
+    }
+
+    private async Task OnSelectEntity(IEntity entity)
+    {
+        SelectedEntity = entity;
     }
 }

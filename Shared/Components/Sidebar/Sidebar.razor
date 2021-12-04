@@ -1,4 +1,5 @@
-﻿<div class="w-80 flex flex-col text-label">
+﻿@using ProjectAveryCommon.Model.Entity.Pocos
+<div class="w-80 flex flex-col text-label">
     @* Part over server list *@
     <div class="bg-forkBlue flex py-3 px-4 items-center">
         <div class="flex-1 flex flex-col">
@@ -16,9 +17,12 @@
     <div class="bg-forkBlue-light flex-1 mt-5 flex flex-col">
         @* Server *@
         <div class="flex-1">
-            @foreach (var entity in Entities)
+            @if (Entities != null)
             {
-                <Entity Value="@entity"></Entity>
+                @foreach (var entity in Entities)
+                {
+                    <SidebarEntity Value="@entity" OnClickCallback="OnSelectEntity" IsSelected="@(SelectedEntity == entity)"></SidebarEntity>
+                }
             }
         </div>
 
@@ -32,6 +36,15 @@
 
 @code
 {
+    [Parameter]
+    public EventCallback<IEntity> OnSelectEntity { get; set; }
+
+    [CascadingParameter(Name = nameof(Entities))]
+    public List<IEntity>? Entities { get; set; }
+
+    [CascadingParameter(Name = nameof(SelectedEntity))]
+    public IEntity? SelectedEntity { get; set; }
+
     private void TestClickHandler(IconButton button)
     {
         Console.WriteLine(button.IconChar);

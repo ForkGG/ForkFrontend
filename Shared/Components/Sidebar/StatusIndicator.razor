@@ -1,0 +1,30 @@
+﻿@using ProjectAveryCommon.Model.Entity.Enums
+<div style="height: 8px; width: 8px;" class="rounded-full @($"bg-{Color}")"></div>
+
+@code {
+
+    [Parameter]
+    public EntityStatus Status { get; set; }
+
+    private string Color
+    {
+        get
+        {
+            switch (Status)
+            {
+                case EntityStatus.STOPPED:
+                    return "status-inactive";
+                case EntityStatus.STARTING:
+                case EntityStatus.STOPPING:
+                    return "status-orange";
+                case EntityStatus.STARTED:
+                    return "status-green";
+                case EntityStatus.CRASHED:
+                    return "status-red";
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+    }
+
+}
