@@ -3,7 +3,6 @@
 bin
 obj
 UpgradeLog.htm
-*.html
 *.user
 Properties/PublishProfiles
 *.css.map
