@@ -3,7 +3,7 @@
 
 <EditForm Model="@InputForm" OnSubmit="OnSubmit">
     <div class="console-in-container flex h-12">
-        <Checkbox class="self-start" @bind-Value="@InputForm.SayMode" DisplayName="/ Say"></Checkbox>
+        <Checkbox class="self-start" @bind-Value="@InputForm.SayMode" DisplayName="Chat"></Checkbox>
         <div class="flex-1 flex mx-6 self-center">
             <span class="text-label mr-1 monospace">@Prefix</span>
             <Textfield class="flex-1" @bind-Value="@InputForm.Input"></Textfield>

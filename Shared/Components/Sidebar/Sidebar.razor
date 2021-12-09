@@ -4,12 +4,12 @@
     <div class="bg-forkBlue flex py-2 px-4 items-center" style="height: 50px">
         <div class="flex-1 flex flex-col">
             <span class="text-md leading-none">v1.0.0</span>
-            <span class="text-xs">You are up to date</span>
+            <span class="text-sm">You are up to date</span>
         </div>
         @* TODO only show if update privilege is granted *@
         @if (true)
         {
-            <IconButton IconChar="'r'" IconSize="19" NoBackground="true" OnClickMethod="TestClickHandler"></IconButton>
+            <IconButton IconChar="'r'" IconSize="18" NoBackground="true" OnClickMethod="TestClickHandler"></IconButton>
         }
     </div>
 
@@ -28,8 +28,8 @@
 
         @* Controls *@
         <div class="flex justify-end gap-3 p-3">
-            <IconButton IconChar="'I'" IconSize="19" Size="45"></IconButton>
-            <IconButton IconChar="'C'" IconSize="19" Size="45"></IconButton>
+            <IconButton IconChar="'I'" IconSize="24" Size="45"></IconButton>
+            <IconButton IconChar="'C'" IconSize="24" Size="45"></IconButton>
         </div>
     </div>
 </div>
