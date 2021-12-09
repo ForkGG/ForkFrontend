@@ -6,6 +6,6 @@ UpgradeLog.htm
 *.html
 *.user
 Properties/PublishProfiles
-*.css
 *.css.map
+*.min.css
 node_modules
