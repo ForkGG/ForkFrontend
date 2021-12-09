@@ -5,6 +5,5 @@ namespace ProjectAveryFrontend.Logic.Services.Notifications;
 public interface INotificationService
 {
     void Register<T>(Func<AbstractNotification, Task> handler) where T : AbstractNotification;
-    Task HandleAsync(AbstractNotification notification);
     Task StartupAsync();
 }

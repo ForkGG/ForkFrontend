@@ -1,25 +1,41 @@
 ﻿@page "/"
+@using ProjectAveryFrontend.Logic.Services.Managers
+@inject IApplicationStateManager _applicationState
 
-<CascadingValue Name="@nameof(SelectedEntity)" Value="SelectedEntity">
-    <div class="flex flex-1 mx-6 my-10 gap-10 overflow-hidden">
-        @* Sidebar *@
-        <CascadingValue Name="@nameof(Entities)" Value="Entities">
-            <Sidebar OnSelectEntity="OnSelectEntity"/>
-        </CascadingValue>
-        @* Content *@
-        <div class="flex-1">
-            @if (SelectedEntity != null)
-            {
-                <Entity></Entity>
-            }
-            else
-            {
+<div class="flex flex-1">
+    @if (_applicationState.IsApplicationReady)
+    {
+        <CascadingValue Name="@nameof(SelectedEntity)" Value="SelectedEntity">
+            <div class="flex flex-1 mx-6 my-10 gap-10 overflow-hidden">
+                @* Sidebar *@
+                <CascadingValue Name="@nameof(_applicationState.ApplicationState.Entities)" Value="_applicationState.ApplicationState.Entities">
+                    <Sidebar OnSelectEntity="OnSelectEntity"/>
+                </CascadingValue>
+                @* Content *@
+                <div class="flex-1">
+                    @if (SelectedEntity != null)
+                    {
+                        <Entity></Entity>
+                    }
+                    else
+                    {
                 @* TODO CKE Welcome Screen if no server exists *@
-                <div></div>
-            }
+                        <div></div>
+                    }
+                </div>
+            </div>
+        </CascadingValue>
+    }
+    else
+    {
+        <div class="w-screen h-screen flex justify-center items-center bg-forkBlue-dark flex-col">
+            <span class="text-label text-lg">@_applicationState.ApplicationStatus</span>
+            <img style="width: 116px; height: 122px" src="ressources/img/loading.gif"/>
         </div>
-    </div>
-</CascadingValue>
+    }
+
+</div>
+
 
 @code {
 

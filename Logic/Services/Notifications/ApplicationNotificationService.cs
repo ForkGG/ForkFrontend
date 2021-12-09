@@ -1,22 +1,29 @@
-﻿using System.Net.WebSockets;
+﻿using System.Diagnostics;
+using System.Net.WebSockets;
+using System.Runtime.CompilerServices;
 using System.Text;
 using ProjectAveryCommon.ExtensionMethods;
 using ProjectAveryCommon.Model.Notifications;
+using ProjectAveryFrontend.Logic.Services.Managers;
+using ProjectAveryFrontend.Model;
 
 namespace ProjectAveryFrontend.Logic.Services.Notifications;
 
 public class ApplicationNotificationService : INotificationService
 {
+    private readonly IApplicationStateManager _applicationState;
     private readonly CancellationTokenSource _cancellationTokenSource;
     private readonly ILogger<ApplicationNotificationService> _logger;
-    private readonly ClientWebSocket _webSocket;
+    private readonly Uri _webSocketUri = new("ws://localhost:35566");
+    private ClientWebSocket? _webSocket;
 
-    public ApplicationNotificationService(ILogger<ApplicationNotificationService> logger)
+    public ApplicationNotificationService(ILogger<ApplicationNotificationService> logger,
+        IApplicationStateManager applicationState)
     {
         logger.LogInformation("Initializing NotificationService");
         _logger = logger;
+        _applicationState = applicationState;
         _cancellationTokenSource = new CancellationTokenSource();
-        _webSocket = new ClientWebSocket();
         RegisteredHandlers = new Dictionary<Type, List<Func<AbstractNotification, Task>>>();
     }
 
@@ -34,52 +41,76 @@ public class ApplicationNotificationService : INotificationService
         RegisteredHandlers[typeof(T)].Add(handler);
     }
 
-    public async Task HandleAsync(AbstractNotification? notification)
+    public async Task StartupAsync()
     {
-        if (notification == null) _logger.LogDebug("Can't handle notification because it was null");
+        while (!_cancellationTokenSource.IsCancellationRequested)
+        {
+            _webSocket = new ClientWebSocket();
+            try
+            {
+                IAsyncEnumerable<string> messages = ConnectAsync(_cancellationTokenSource.Token);
+                await foreach (string message in messages) await HandleMessage(message);
+                _applicationState.WebsocketStatus = WebsocketStatus.Disconnected;
+                _logger.LogDebug("Websocket closed. Reconnecting in 500ms");
+                _webSocket.Abort();
+                _webSocket.Dispose();
+                await Task.Delay(500);
+            }
+            catch (Exception e)
+            {
+                _logger.LogDebug($"Error in Websocket: {e.Message}");
+                _webSocket.Abort();
+                _webSocket.Dispose();
+                await Task.Delay(500);
+            }
+        }
+    }
+
+    private async Task HandleMessage(string message)
+    {
+        AbstractNotification notification = message.FromJson<AbstractNotification>();
+        if (notification == null)
+        {
+            _logger.LogDebug("Can't handle notification because it was null");
+            return;
+        }
+
         var handlers = RegisteredHandlers.ContainsKey(notification.GetType())
             ? RegisteredHandlers[notification.GetType()]
             : new List<Func<AbstractNotification, Task>>();
         _logger.LogDebug($"Handling {nameof(notification)} with {handlers.Count} handlers");
-        foreach (Func<AbstractNotification, Task> handler in handlers) await handler.Invoke(notification);
+        foreach (Func<AbstractNotification, Task> handler in handlers)
+            await handler.Invoke(notification);
     }
 
-    public async Task StartupAsync()
+    /// <summary>
+    ///     Connect to the websocket and begin yielding messages
+    ///     received from the connection.
+    /// </summary>
+    private async IAsyncEnumerable<string> ConnectAsync(
+        [EnumeratorCancellation] CancellationToken cancellationToken)
     {
-        await _webSocket.ConnectAsync(new Uri("ws://localhost:35566"), _cancellationTokenSource.Token);
-        _ = ReceiveLoop();
-    }
-
-    private async Task ReceiveLoop()
-    {
-        //https://gist.github.com/SteveSandersonMS/5aaff6b010b0785075b0a08cc1e40e01
-        var buffer = new ArraySegment<byte>(new byte[1024]);
-
-        while (!_cancellationTokenSource.IsCancellationRequested && _webSocket.State != WebSocketState.Closed)
-            try
+        if (_webSocket == null) yield break;
+        await _webSocket.ConnectAsync(_webSocketUri, cancellationToken);
+        _applicationState.WebsocketStatus = WebsocketStatus.Connected;
+        var buffer = new ArraySegment<byte>(new byte[2048]);
+        while (!cancellationToken.IsCancellationRequested)
+        {
+            WebSocketReceiveResult result;
+            await using var ms = new MemoryStream();
+            do
             {
-                var received = await _webSocket.ReceiveAsync(buffer, _cancellationTokenSource.Token);
-                var receivedAsText = Encoding.UTF8.GetString(buffer.Array, 0, received.Count);
-                while (!received.EndOfMessage)
-                {
-                    received = await _webSocket.ReceiveAsync(buffer, _cancellationTokenSource.Token);
-                    receivedAsText += Encoding.UTF8.GetString(buffer.Array, 0, received.Count);
-                }
+                result = await _webSocket.ReceiveAsync(buffer, cancellationToken);
+                Debug.Assert(buffer.Array != null, "buffer.Array != null");
+                ms.Write(buffer.Array, buffer.Offset, result.Count);
+            } while (!result.EndOfMessage);
 
-                try
-                {
-                    AbstractNotification notification = receivedAsText.FromJson<AbstractNotification>();
-                    _logger.LogDebug($"Handling notification: {receivedAsText}");
-                    await HandleAsync(notification);
-                }
-                catch (Exception e)
-                {
-                    _logger.LogError(e, $"Exception while parsing and handling notification: {receivedAsText}");
-                }
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, "Exception while receiving notification");
-            }
+            ms.Seek(0, SeekOrigin.Begin);
+
+            yield return Encoding.UTF8.GetString(ms.ToArray());
+
+            if (result.MessageType == WebSocketMessageType.Close)
+                break;
+        }
     }
 }
