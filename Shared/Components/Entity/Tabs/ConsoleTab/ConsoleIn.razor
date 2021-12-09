@@ -1,0 +1,33 @@
+﻿@using ProjectAveryFrontend.Logic.Services.Connections
+@inject IEntityConnectionService _entityConnection
+
+<EditForm Model="@InputForm" OnSubmit="OnSubmit">
+    <div class="console-in-container flex h-12">
+        <Checkbox class="self-start" @bind-Value="@InputForm.SayMode" DisplayName="/ Say"></Checkbox>
+        <div class="flex-1 flex mx-6 self-center">
+            <span class="text-label mr-1 monospace">@Prefix</span>
+            <Textfield class="flex-1" @bind-Value="@InputForm.Input"></Textfield>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    private ConsoleInput InputForm { get; set; } = new();
+
+    private string Prefix => InputForm.SayMode ? "/say " : "/";
+
+    private async Task OnSubmit()
+    {
+        if (await _entityConnection.SubmitConsoleInAsync($"{Prefix}{InputForm.Input}"))
+        {
+            InputForm.Input = "";
+        }
+    }
+
+    private class ConsoleInput
+    {
+        public bool SayMode { get; set; }
+        public string? Input { get; set; }
+    }
+
+}

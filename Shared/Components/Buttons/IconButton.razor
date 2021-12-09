@@ -1,4 +1,4 @@
-﻿<div style="@SizeString" class="icon-button cursor-pointer hover:text-label-hover @(NoBackground ? "text-text" : "text-text-darkest bg-button") flex justify-center items-center" @onclick="ClickHandler">
+﻿<div style="@SizeString" class="icon-button cursor-pointer @($"hover:text-{HoverColor}") @(NoBackground ? "text-text-dark" : "text-text-darkest bg-button") flex justify-center items-center" @onclick="ClickHandler">
     <span class="icon" style="font-size: @IconSizeString">@IconChar</span>
 </div>
 
@@ -23,6 +23,9 @@
 
     [Parameter]
     public bool NoBackground { get; set; } = false;
+
+    [Parameter]
+    public string HoverColor { get; set; } = "label-hover";
 
     private string SizeString => Size.HasValue ? $"width: {Size}px; height: {Size}px;" : "";
 

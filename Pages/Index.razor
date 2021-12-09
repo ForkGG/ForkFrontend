@@ -1,14 +1,22 @@
 ﻿@page "/"
 
 <CascadingValue Name="@nameof(SelectedEntity)" Value="SelectedEntity">
-    <div class="flex flex-1 mx-6 my-10 gap-4">
+    <div class="flex flex-1 mx-6 my-10 gap-10 overflow-hidden">
         @* Sidebar *@
         <CascadingValue Name="@nameof(Entities)" Value="Entities">
             <Sidebar OnSelectEntity="OnSelectEntity"/>
         </CascadingValue>
         @* Content *@
         <div class="flex-1">
-            <h3 class="text-text-green">Index</h3>
+            @if (SelectedEntity != null)
+            {
+                <Entity></Entity>
+            }
+            else
+            {
+                @* TODO CKE Welcome Screen if no server exists *@
+                <div></div>
+            }
         </div>
     </div>
 </CascadingValue>

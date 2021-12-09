@@ -1,0 +1,77 @@
+﻿@using ProjectAveryCommon.ExtensionMethods
+@using ProjectAveryCommon.Model.Entity.Pocos
+@using ProjectAveryCommon.Model.Entity.Transient.Console
+@using ProjectAveryCommon.Model.Notifications.EntityNotifications
+@using ProjectAveryFrontend.Logic.Services.Notifications
+@inject IJSRuntime _js
+@inject INotificationService _notificationService
+
+<div class="flex-1 flex flex-col console-out-container">
+    @*Controls*@
+    <div class="flex justify-between">
+        <span style="width: 60px" content=" "></span>
+        <span class="text-xl text-label font-bold p-2">Console</span>
+        <div class="flex gap-3 mr-5 items-center">
+            <IconButton Size="23" IconSize="22" NoBackground="true" IconChar="'F'"></IconButton>
+            <IconButton Size="23" IconSize="22" NoBackground="true" IconChar="'O'"></IconButton>
+        </div>
+    </div>
+
+    @* Console *@
+    <div class="flex-1">
+        <div class="p-3 overflow-ellipsis text-text overflow-y-auto max-h-full" @ref="_consoleScroller" @onscroll="OnConsoleScroll">
+            @foreach (var message in ConsoleMessages)
+            {
+                <span class="block monospace leading-snug text-sm">@message.Message</span>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+
+    [CascadingParameter(Name = "SelectedEntity")]
+    public IEntity? Entity { get; set; }
+
+    private List<ConsoleMessage> ConsoleMessages { get; set; }
+
+    private ElementReference _consoleScroller;
+
+    private bool _autoscroll = true;
+    private bool _userscroll = true;
+
+    protected override Task OnInitializedAsync()
+    {
+        ConsoleMessages = new List<ConsoleMessage>();
+    //TODO CKE initialize console with existing lines (API call)
+        _notificationService.Register<ConsoleAddNotification>(notification =>
+        {
+            if (notification is ConsoleAddNotification consoleAddNotification)
+                return HandleNewConsoleLine(consoleAddNotification);
+            Console.Error.WriteLine($"Not a console notification: {notification.ToJson()}");
+            return Task.CompletedTask;
+        });
+        return base.OnInitializedAsync();
+    }
+
+    private async Task HandleNewConsoleLine(ConsoleAddNotification notification)
+    {
+        ConsoleMessages.Add(notification.NewConsoleMessage);
+        StateHasChanged();
+        if (_autoscroll)
+        {
+            _userscroll = false;
+            await _js.InvokeVoidAsync("ScrollToBottom", _consoleScroller);
+            _userscroll = true;
+        }
+    }
+
+    private async Task OnConsoleScroll()
+    {
+        if (_userscroll)
+        {
+            _autoscroll = await _js.InvokeAsync<bool>("IsScrolledToBottom", new object[] { _consoleScroller });
+        }
+    }
+
+}

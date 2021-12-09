@@ -53,6 +53,14 @@ module.exports = {
                 orange: '#CEA150',
                 green: '#50CE61',
                 red: '#CE5050'
+            },
+            scrollbar: {
+                background: '#1D2030',
+                thumb: {
+                    DEFAULT: '#292C3D',
+                    hover: '#313549',
+                    active: '#3b4059'
+                }
             }
         },
         extend: {},

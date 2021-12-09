@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Components;
 using ProjectAveryCommon.Model.Application;
 using ProjectAveryCommon.Model.Entity.Pocos;
 using ProjectAveryFrontend.Logic.Services.Connections;
+using ProjectAveryFrontend.Logic.Services.Notifications;
 
 namespace ProjectAveryFrontend.Pages;
 
@@ -14,6 +15,7 @@ public partial class Index : ComponentBase
     }
 
     [Inject] private IApplicationConnectionService ApplicationConnection { get; set; }
+    [Inject] private INotificationService NotificationService { get; set; }
 
     public IEntity? SelectedEntity { get; set; }
 
@@ -21,11 +23,14 @@ public partial class Index : ComponentBase
 
     protected override async Task OnInitializedAsync()
     {
-        await Task.Delay(1000);
+        //To simulate a network delay
+        //await Task.Delay(1000);
+        //TODO handle not available error and display it correctly
         State state = await ApplicationConnection.GetApplicationState();
         Entities = new List<IEntity>(state.Entities);
         SelectedEntity = Entities.FirstOrDefault();
         StateHasChanged();
+        _ = NotificationService.StartupAsync();
     }
 
     private async Task OnSelectEntity(IEntity entity)

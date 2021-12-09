@@ -1,7 +1,53 @@
-﻿<div>
-    @*  *@
+﻿@using ProjectAveryCommon.Model.Entity.Pocos
+<div class="flex h-full">
+    @* Center Part *@
+    <div class="flex-1 flex flex-col">
+        @* Top Bar *@
+        <div class="flex gap-6 mb-5">
+            @* Navigation *@
+            <IconTabControl OnTabSelected="EntityTabSelected">
+                <IconTab RelatedType="typeof(ConsoleTab)" IconCharacter="'T'"></IconTab>
+                <IconTab IconCharacter="'S'"></IconTab>
+                <IconTab IconCharacter="'P'"></IconTab>
+                <IconTab IconCharacter="'W'"></IconTab>
+            </IconTabControl>
+            @* Entity Overview *@
+            <div class="flex-1 max-w-3xl p-2 bg-forkBlue flex justify-between items-center">
+                <div class="flex gap-2 p-1">
+                    <IconButton Size="24" IconSize="13" IconChar="'s'"></IconButton>
+                    <IconButton Size="24" IconSize="12" IconChar="'h'"></IconButton>
+                    <IconButton Size="24" IconSize="12" IconChar="'r'"></IconButton>
+                </div>
+                <span class="font-bold text-lg text-label whitespace-nowrap">@SelectedEntity?.Name</span>
+                <IconButton Size="30" NoBackground="true" IconChar="'D'" IconSize="19" HoverColor="text-red"></IconButton>
+            </div>
+        </div>
+        @* Content *@
+        @if (SelectedEntityTabType != null)
+        {
+            <DynamicComponent Type="SelectedEntityTabType"></DynamicComponent>
+        }
+    </div>
+
+    @* Player list *@
+    <div class="w-80">
+        @* Top Bar *@
+
+        @* Content *@
+
+    </div>
 </div>
 
 @code {
+
+    [CascadingParameter(Name = nameof(SelectedEntity))]
+    public IEntity? SelectedEntity { get; set; }
+
+    private Type? SelectedEntityTabType { get; set; }
+
+    private void EntityTabSelected(IconTab tab)
+    {
+        SelectedEntityTabType = tab.RelatedType;
+    }
 
 }

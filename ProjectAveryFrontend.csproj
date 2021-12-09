@@ -22,10 +22,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Logic\Utility" />
-    </ItemGroup>
-
-    <ItemGroup>
         <ProjectReference Include="..\ProjectAveryCommon\ProjectAveryCommon.csproj" />
     </ItemGroup>
 
