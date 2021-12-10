@@ -60,7 +60,7 @@
     }
 
     .console-in-container::before {
-        clip-path: polygon(0 25px, 1000px 25px, 75px 0, 100% 0, 100% 100%, 0 100%);
+        clip-path: polygon(0 25px, 50px 25px, 75px 0, 100% 0, 100% 100%, 0 100%);
     }
 
 
