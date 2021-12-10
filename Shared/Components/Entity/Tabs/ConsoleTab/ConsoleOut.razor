@@ -1,4 +1,5 @@
 ﻿@using ProjectAveryCommon.ExtensionMethods
+@using ProjectAveryCommon.Model.Entity.Enums.Console
 @using ProjectAveryCommon.Model.Entity.Pocos
 @using ProjectAveryCommon.Model.Entity.Transient.Console
 @using ProjectAveryCommon.Model.Notifications.EntityNotifications
@@ -19,11 +20,10 @@
 
     @* Console *@
     <div class="flex-1">
-        <div class="p-3 overflow-ellipsis text-text overflow-y-auto max-h-full" @ref="_consoleScroller" @onscroll="OnConsoleScroll">
-            @foreach (var message in ConsoleMessages)
-            {
-                <span class="block monospace leading-snug text-sm">@message.Message</span>
-            }
+        <div id="consoleScrollArea" class="clusterize-scroll p-3 overflow-ellipsis text-text overflow-y-auto max-h-full" @ref="_consoleScroller" @onscroll="OnConsoleScroll">
+            <div id="consoleContentArea" class="clusterize-content">
+                <div class="clusterize-no-data">Loading Console...</div>
+            </div>
         </div>
     </div>
 </div>
@@ -40,10 +40,9 @@
     private bool _autoscroll = true;
     private bool _userscroll = true;
 
-    protected override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
         ConsoleMessages = new List<ConsoleMessage>();
-    //TODO CKE initialize console with existing lines (API call)
         _notificationService.Register<ConsoleAddNotification>(notification =>
         {
             if (notification is ConsoleAddNotification consoleAddNotification)
@@ -51,12 +50,29 @@
             Console.Error.WriteLine($"Not a console notification: {notification.ToJson()}");
             return Task.CompletedTask;
         });
-        return base.OnInitializedAsync();
+    }
+
+
+    private bool _isFirstRender = true;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (_isFirstRender)
+        {
+            _isFirstRender = false;
+    // TODO CKE initialize console with existing lines (API call)
+            for (int i = 0; i < 500; i++)
+            {
+                ConsoleMessages.Add(new ConsoleMessage($"Message {i}", ConsoleMessageType.UserInput));
+            }
+            await _js.InvokeVoidAsync("InitConsoleClusterize", ConsoleMessages.Select(ConsoleMessageToHtml).ToList());
+        }
     }
 
     private async Task HandleNewConsoleLine(ConsoleAddNotification notification)
     {
         ConsoleMessages.Add(notification.NewConsoleMessage);
+        await _js.InvokeVoidAsync("AppendToConsole", ConsoleMessageToHtml(notification.NewConsoleMessage));
         StateHasChanged();
         if (_autoscroll)
         {
@@ -66,12 +82,19 @@
         }
     }
 
+    //TODO Search feature: Use the update method of clusterize to apply new css to found rows and scroll to the found results
+
     private async Task OnConsoleScroll()
     {
         if (_userscroll)
         {
             _autoscroll = await _js.InvokeAsync<bool>("IsScrolledToBottom", new object[] { _consoleScroller });
         }
+    }
+
+    private string ConsoleMessageToHtml(ConsoleMessage message)
+    {
+        return $"<div class=\"block monospace leading-snug text-sm\">{message.Message}</div>";
     }
 
 }
