@@ -20,8 +20,8 @@
 
     @* Console *@
     <div class="flex-1">
-        <div id="consoleScrollArea" class="clusterize-scroll p-3 overflow-ellipsis text-text overflow-y-auto max-h-full" @ref="_consoleScroller" @onscroll="OnConsoleScroll">
-            <div id="consoleContentArea" class="clusterize-content">
+        <div id="@($"consoleScrollArea{Entity?.Id}")" class="clusterize-scroll p-3 overflow-ellipsis text-text overflow-y-auto max-h-full select-text" @ref="_consoleScroller" @onscroll="OnConsoleScroll">
+            <div id="@($"consoleContentArea{Entity?.Id}")" class="clusterize-content" @ref="_consoleContent">
                 <div class="clusterize-no-data">Loading Console...</div>
             </div>
         </div>
@@ -30,19 +30,19 @@
 
 @code {
 
-    [CascadingParameter(Name = "SelectedEntity")]
+    [CascadingParameter]
     public IEntity? Entity { get; set; }
 
-    private List<ConsoleMessage> ConsoleMessages { get; set; }
+    private List<ConsoleMessage> ConsoleMessages { get; set; } = new();
 
     private ElementReference _consoleScroller;
+    private ElementReference _consoleContent;
 
     private bool _autoscroll = true;
     private bool _userscroll = true;
 
     protected override async Task OnInitializedAsync()
     {
-        ConsoleMessages = new List<ConsoleMessage>();
         _notificationService.Register<ConsoleAddNotification>(notification =>
         {
             if (notification is ConsoleAddNotification consoleAddNotification)
@@ -63,16 +63,16 @@
     // TODO CKE initialize console with existing lines (API call)
             for (int i = 0; i < 500; i++)
             {
-                ConsoleMessages.Add(new ConsoleMessage($"Message {i}", ConsoleMessageType.UserInput));
+                ConsoleMessages.Add(new ConsoleMessage($"{Entity?.Name} Message {i}", ConsoleMessageType.UserInput));
             }
-            await _js.InvokeVoidAsync("InitConsoleClusterize", ConsoleMessages.Select(ConsoleMessageToHtml).ToList());
+            await _js.InvokeVoidAsync("InitConsoleClusterize", ConsoleMessages.Select(ConsoleMessageToHtml).ToList(), _consoleScroller, _consoleContent);
         }
     }
 
     private async Task HandleNewConsoleLine(ConsoleAddNotification notification)
     {
         ConsoleMessages.Add(notification.NewConsoleMessage);
-        await _js.InvokeVoidAsync("AppendToConsole", ConsoleMessageToHtml(notification.NewConsoleMessage));
+        await _js.InvokeVoidAsync("AppendToConsole", ConsoleMessageToHtml(notification.NewConsoleMessage), _consoleScroller);
         StateHasChanged();
         if (_autoscroll)
         {

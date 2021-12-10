@@ -5,26 +5,31 @@
 <div class="flex flex-1">
     @if (_applicationState.IsApplicationReady)
     {
-        <CascadingValue Name="@nameof(SelectedEntity)" Value="SelectedEntity">
-            <div class="flex flex-1 mx-6 my-10 gap-10 overflow-hidden">
-                @* Sidebar *@
-                <CascadingValue Name="@nameof(_applicationState.ApplicationState.Entities)" Value="_applicationState.ApplicationState.Entities">
+        <div class="flex flex-1 mx-6 my-10 gap-10 overflow-hidden">
+            @* Sidebar *@
+            <CascadingValue Name="@nameof(_applicationState.ApplicationState.Entities)" Value="_applicationState.ApplicationState.Entities">
+                <CascadingValue Name="@nameof(SelectedEntity)" Value="SelectedEntity">
                     <Sidebar OnSelectEntity="OnSelectEntity"/>
                 </CascadingValue>
-                @* Content *@
-                <div class="flex-1">
-                    @if (SelectedEntity != null)
+            </CascadingValue>
+            @* Content *@
+            <div class="flex-1">
+                @if (_applicationState.ApplicationState.Entities.Count > 0)
+                {
+                    foreach (var entity in _applicationState.ApplicationState.Entities)
                     {
-                        <Entity></Entity>
+                        <div class="@(entity == SelectedEntity ? "h-full" : "hidden")">
+                            <Entity @key="@entity.Id" Value="entity"></Entity>
+                        </div>
                     }
-                    else
-                    {
+                }
+                else
+                {
                 @* TODO CKE Welcome Screen if no server exists *@
-                        <div></div>
-                    }
-                </div>
+                    <div></div>
+                }
             </div>
-        </CascadingValue>
+        </div>
     }
     else
     {

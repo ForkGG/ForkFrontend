@@ -326,23 +326,26 @@ function getStyle(prop, elem) {
     return window.getComputedStyle ? window.getComputedStyle(elem)[prop] : elem.currentStyle[prop];
 }
 
-let consoleCluster;
+let consoleClusters = new Map();
 
-function InitConsoleClusterize(data) {
-    consoleCluster = new Clusterize({
+function InitConsoleClusterize(data, consoleScroller, consoleContent) {
+    let consoleCluster = new Clusterize({
         rows: data,
-        scrollId: 'consoleScrollArea',
-        contentId: 'consoleContentArea',
-        rows_in_block: 30
-    })
+        scrollId: consoleScroller.id,
+        contentId: consoleContent.id,
+        rows_in_block: 100
+    });
+    consoleClusters.set(consoleScroller.id, consoleCluster);
 }
 
-function UpdateConsoleCluster(data) {
-    consoleCluster.update(data);
+function UpdateConsoleCluster(data, consoleScroller) {
+    if (consoleClusters.get(consoleScroller.id)) {
+        consoleClusters.get(consoleScroller.id).update(data);
+    }
 }
 
-function AppendToConsole(data) {
-    if (consoleCluster) {
-        consoleCluster.append(data);
+function AppendToConsole(data, consoleScroller) {
+    if (consoleClusters.get(consoleScroller.id)) {
+        consoleClusters.get(consoleScroller.id).append(data);
     }
 }

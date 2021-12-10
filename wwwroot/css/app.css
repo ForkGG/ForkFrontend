@@ -50,7 +50,7 @@
         right: 0;
         bottom: 0;
         left: 0;
-        clip-path: polygon(0 0, calc(100% - 136px) 0, calc(100% - 90px) 46px, 100% 46px, 100% 100%, 0 100%);
+        clip-path: polygon(0 0, calc(100% - 136px) 0, calc(100% - 90px) 48px, 100% 48px, 100% 100%, 0 100%);
         @apply bg-forkBlue-dark;
     }
 

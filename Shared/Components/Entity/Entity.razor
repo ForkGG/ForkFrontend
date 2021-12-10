@@ -1,4 +1,5 @@
 ﻿@using ProjectAveryCommon.Model.Entity.Pocos
+<CascadingValue Value="Value">
 <div class="flex h-full">
     @* Center Part *@
     <div class="flex-1 flex flex-col">
@@ -18,7 +19,7 @@
                     <IconButton Size="25" IconSize="9" IconChar="'h'"></IconButton>
                     <IconButton Size="25" IconSize="13" IconChar="'r'"></IconButton>
                 </div>
-                <span class="font-bold text-md text-label whitespace-nowrap">@SelectedEntity?.Name</span>
+                <span class="font-bold text-md text-label whitespace-nowrap">@Value?.Name</span>
                 <IconButton Size="30" NoBackground="true" IconChar="'D'" IconSize="19" HoverColor="text-red"></IconButton>
             </div>
         </div>
@@ -37,11 +38,14 @@
 
     </div>
 </div>
+    
+</CascadingValue>
 
 @code {
 
-    [CascadingParameter(Name = nameof(SelectedEntity))]
-    public IEntity? SelectedEntity { get; set; }
+    [Parameter]
+    [EditorRequired]
+    public IEntity? Value { get; set; }
 
     private Type? SelectedEntityTabType { get; set; }
 
