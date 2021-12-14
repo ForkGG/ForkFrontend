@@ -1,4 +1,5 @@
-﻿using ProjectAveryFrontend.Logic.Services.HttpsClients;
+﻿using System.Net.Http.Headers;
+using ProjectAveryFrontend.Logic.Services.HttpsClients;
 
 namespace ProjectAveryFrontend.Logic.Services.Connections;
 
@@ -12,5 +13,6 @@ public abstract class AbstractConnectionService
         _logger = logger;
         //TODO CKE Set token in all http requests
         _client = client.Client;
+        _client.DefaultRequestHeaders.Authorization = AuthenticationHeaderValue.Parse("asdf");
     }
 }

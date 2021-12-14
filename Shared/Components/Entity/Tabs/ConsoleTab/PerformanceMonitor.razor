@@ -1,0 +1,22 @@
+﻿<div class="performance-background clipping flex p-4 justify-center">
+    <div class="clipping performance-circle justify-center items-center flex flex-col overflow-visible w-16 h-16">
+        <span class="text-status-green font-bold text-3xl leading-none">@Content</span>
+        <span class="text-status-green font-bold leading-none">@SubTitle</span>
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public string? Content { get; set; }
+
+    [Parameter]
+    public string? SubTitle { get; set; }
+
+    [Parameter]
+    public string? Name { get; set; }
+
+    [Parameter]
+    public string? Color { get; set; }
+
+}

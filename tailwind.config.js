@@ -43,7 +43,9 @@ module.exports = {
                 DEFAULT: '#A3A8C1',
                 red: '#CE5050',
                 orange: '#CEA150',
-                green: '#50CE61'
+                green: '#50CE61',
+                selected: '#151622',
+                selection: '#E2E3E9'
             },
             button: {
                 DEFAULT: '#575C82'

@@ -7,7 +7,7 @@
 @inject IJSRuntime _js
 @inject INotificationService _notificationService
 
-<div class="flex-1 flex flex-col console-out-container">
+<div class="flex-1 flex flex-col console-out-container clipping">
     @*Controls*@
     <div class="flex justify-between">
         <span style="width: 60px" content=" "></span>
@@ -21,7 +21,7 @@
     @* Console *@
     <div class="flex-1">
         <div id="@($"consoleScrollArea{Entity?.Id}")" class="clusterize-scroll p-3 overflow-ellipsis text-text overflow-y-auto max-h-full select-text" @ref="_consoleScroller" @onscroll="OnConsoleScroll">
-            <div id="@($"consoleContentArea{Entity?.Id}")" class="clusterize-content" @ref="_consoleContent">
+            <div id="@($"consoleContentArea{Entity?.Id}")" class="clusterize-content console-text" @ref="_consoleContent">
                 <div class="clusterize-no-data">Loading Console...</div>
             </div>
         </div>
@@ -94,7 +94,7 @@
 
     private string ConsoleMessageToHtml(ConsoleMessage message)
     {
-        return $"<div class=\"block monospace leading-snug text-sm\">{message.Message}</div>";
+        return $"<div class=\"block monospace leading-tight text-sm\">{message.Message}</div>";
     }
 
 }
