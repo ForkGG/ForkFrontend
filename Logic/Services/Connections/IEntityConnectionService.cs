@@ -2,5 +2,5 @@
 
 public interface IEntityConnectionService
 {
-    public Task<bool> SubmitConsoleInAsync(string message);
+    public Task<bool> SubmitConsoleInAsync(string message, ulong entityId);
 }

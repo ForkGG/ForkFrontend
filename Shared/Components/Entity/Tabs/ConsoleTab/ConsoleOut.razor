@@ -4,8 +4,11 @@
 @using ProjectAveryCommon.Model.Entity.Transient.Console
 @using ProjectAveryCommon.Model.Notifications.EntityNotifications
 @using ProjectAveryFrontend.Logic.Services.Notifications
+@implements IAsyncDisposable
+
 @inject IJSRuntime _js
 @inject INotificationService _notificationService
+@inject ILogger<ConsoleOut> _logger
 
 <div class="flex-1 flex flex-col console-out-container clipping">
     @*Controls*@
@@ -41,14 +44,13 @@
     private bool _autoscroll = true;
     private bool _userscroll = true;
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        _notificationService.Register<ConsoleAddNotification>(notification =>
+        _notificationService.Register<ConsoleAddNotification>(async notification =>
         {
             if (notification is ConsoleAddNotification consoleAddNotification)
-                return HandleNewConsoleLine(consoleAddNotification);
-            Console.Error.WriteLine($"Not a console notification: {notification.ToJson()}");
-            return Task.CompletedTask;
+                await HandleNewConsoleLine(consoleAddNotification);
+            _logger.LogError($"Not a console notification: {notification.ToJson()}");
         });
     }
 
@@ -66,20 +68,38 @@
                 ConsoleMessages.Add(new ConsoleMessage($"{Entity?.Name} Message {i}", ConsoleMessageType.UserInput));
             }
             await _js.InvokeVoidAsync("InitConsoleClusterize", ConsoleMessages.Select(ConsoleMessageToHtml).ToList(), _consoleScroller, _consoleContent);
+            await ScrollToBottom();
         }
+    }
+
+    // It is important to clean up here else we have too many Registered handlers and NullPointers in JS
+    public async ValueTask DisposeAsync()
+    {
+        _notificationService.Unregister<ConsoleAddNotification>(this);
+        await _js.InvokeVoidAsync("DestroyConsoleCluster", _consoleScroller);
     }
 
     private async Task HandleNewConsoleLine(ConsoleAddNotification notification)
     {
+    // Skip notifications not matching the id
+        if (notification.EntityId != Entity?.Id)
+        {
+            return;
+        }
         ConsoleMessages.Add(notification.NewConsoleMessage);
         await _js.InvokeVoidAsync("AppendToConsole", ConsoleMessageToHtml(notification.NewConsoleMessage), _consoleScroller);
         StateHasChanged();
         if (_autoscroll)
         {
-            _userscroll = false;
-            await _js.InvokeVoidAsync("ScrollToBottom", _consoleScroller);
-            _userscroll = true;
+            await ScrollToBottom();
         }
+    }
+
+    private async Task ScrollToBottom()
+    {
+        _userscroll = false;
+        await _js.InvokeVoidAsync("ScrollToBottom", _consoleScroller);
+        _userscroll = true;
     }
 
     //TODO Search feature: Use the update method of clusterize to apply new css to found rows and scroll to the found results

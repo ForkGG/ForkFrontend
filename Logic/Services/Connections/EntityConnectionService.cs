@@ -8,11 +8,11 @@ public class EntityConnectionService : AbstractConnectionService, IEntityConnect
     {
     }
 
-    public async Task<bool> SubmitConsoleInAsync(string message)
+    public async Task<bool> SubmitConsoleInAsync(string message, ulong entityId)
     {
         try
         {
-            var response = await _client.PostAsync("/v1/entity/consolein", new StringContent(message));
+            var response = await _client.PostAsync($"/v1/entity/{entityId}/consolein", new StringContent(message));
             return response.IsSuccessStatusCode;
         }
         catch (Exception e)

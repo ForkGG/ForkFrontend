@@ -339,13 +339,20 @@ function InitConsoleClusterize(data, consoleScroller, consoleContent) {
 }
 
 function UpdateConsoleCluster(data, consoleScroller) {
-    if (consoleClusters.get(consoleScroller.id)) {
+    if (consoleClusters.has(consoleScroller.id)) {
         consoleClusters.get(consoleScroller.id).update(data);
     }
 }
 
 function AppendToConsole(data, consoleScroller) {
-    if (consoleClusters.get(consoleScroller.id)) {
-        consoleClusters.get(consoleScroller.id).append(data);
+    if (consoleClusters.has(consoleScroller.id)) {
+        consoleClusters.get(consoleScroller.id).append([data]);
+    }
+}
+
+function DestroyConsoleCluster(consoleScroller) {
+    if (consoleClusters.has(consoleScroller.id)) {
+        consoleClusters.get(consoleScroller.id).destroy();
+        consoleClusters.delete(consoleScroller.id);
     }
 }
