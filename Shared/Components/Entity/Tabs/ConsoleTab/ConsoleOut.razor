@@ -114,7 +114,8 @@
 
     private string ConsoleMessageToHtml(ConsoleMessage message)
     {
-        return $"<div class=\"block monospace leading-tight text-sm\">{message.Message}</div>";
+        string escapedMessage = message.Message.Replace("<", "&lt;").Replace("\"", "&quot;").Replace(">", "&gt;");
+        return $"<div class=\"block monospace leading-tight text-sm\">{escapedMessage}</div>";
     }
 
 }

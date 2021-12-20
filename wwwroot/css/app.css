@@ -78,6 +78,10 @@
         @apply bg-status-green;
     }
 
+    .console-text > div {
+        overflow-wrap: break-word;
+    }
+
     .console-text > div::selection {
         background: theme('colors.text.selection');
         @apply text-text-selected;

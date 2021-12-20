@@ -12,14 +12,14 @@
         {
             switch (Status)
             {
-                case EntityStatus.STOPPED:
+                case EntityStatus.Stopped:
                     return "status-inactive";
-                case EntityStatus.STARTING:
-                case EntityStatus.STOPPING:
+                case EntityStatus.Starting:
+                case EntityStatus.Stopping:
                     return "status-orange";
-                case EntityStatus.STARTED:
+                case EntityStatus.Started:
                     return "status-green";
-                case EntityStatus.CRASHED:
+                case EntityStatus.Crashed:
                     return "status-red";
                 default:
                     throw new ArgumentOutOfRangeException();

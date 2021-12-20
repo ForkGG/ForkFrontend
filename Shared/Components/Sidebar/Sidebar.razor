@@ -1,4 +1,11 @@
-﻿@using ProjectAveryCommon.Model.Entity.Pocos
+﻿@using ProjectAveryFrontend.Logic.Services.Connections
+@using ProjectAveryCommon.Model.Entity.Pocos
+@using ProjectAveryCommon.Model.Entity.Pocos.ServerSettings
+@using ProjectAveryCommon.Model.Payloads.Entity
+@inject ILogger<Sidebar> _logger
+@inject IEntityConnectionService _entityConnection
+
+
 <div class="w-80 flex flex-col text-label">
     @* Part over server list *@
     <div class="bg-forkBlue flex py-2 px-4 items-center" style="height: 50px">
@@ -29,7 +36,7 @@
         @* Controls *@
         <div class="flex justify-end gap-3 p-3">
             <IconButton IconChar="'I'" IconSize="24" Size="45"></IconButton>
-            <IconButton IconChar="'C'" IconSize="24" Size="45"></IconButton>
+            <IconButton IconChar="'C'" IconSize="24" Size="45" OnClickMethod="CreateServerHandler"></IconButton>
         </div>
     </div>
 </div>
@@ -48,5 +55,24 @@
     private void TestClickHandler(IconButton button)
     {
         Console.WriteLine(button.IconChar);
+    }
+
+    private async Task CreateServerHandler(IconButton button)
+    {
+        var createPayload = new CreateServerPayload();
+        createPayload.ServerName = "test";
+        createPayload.JavaSettings = new JavaSettings();
+        createPayload.ServerVersion = new ServerVersion();
+        createPayload.ServerVersion.JarLink = "https://launcher.mojang.com/v1/objects/125e5adf40c659fd3bce3e66e67a16bb49ecc1b9/server.jar";
+        createPayload.VanillaSettings = new VanillaSettings("world");
+
+        try
+        {
+            _logger.LogError(await _entityConnection.CreateServerAsync(createPayload) + "");
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Error while creating server");
+        }
     }
 }

@@ -94,12 +94,12 @@ var Clusterize = function (data) {
             resize_debounce = setTimeout(self.refresh, 100);
         }
     on('scroll', self.scroll_elem, scrollEv);
-    on('resize', window, resizeEv);
+    //on('resize', window, resizeEv);
 
     // public methods
     self.destroy = function (clean) {
         off('scroll', self.scroll_elem, scrollEv);
-        off('resize', window, resizeEv);
+        //off('resize', window, resizeEv);
         self.html((clean ? self.generateEmptyRow() : rows).join(''));
     }
     self.refresh = function (force) {
@@ -333,7 +333,7 @@ function InitConsoleClusterize(data, consoleScroller, consoleContent) {
         rows: data,
         scrollId: consoleScroller.id,
         contentId: consoleContent.id,
-        rows_in_block: 100
+        rows_in_block: 50
     });
     consoleClusters.set(consoleScroller.id, consoleCluster);
 }

@@ -5,7 +5,7 @@ function ScrollToBottom(element) {
 }
 
 function IsScrolledToBottom(element) {
-    return element.scrollHeight - Math.abs(element.scrollTop) === element.clientHeight;
+    return element.scrollTop + element.clientHeight >= element.scrollHeight;
 }
 
 

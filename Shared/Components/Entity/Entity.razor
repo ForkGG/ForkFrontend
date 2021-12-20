@@ -1,44 +1,48 @@
-﻿@using ProjectAveryCommon.Model.Entity.Pocos
+﻿@using ProjectAveryFrontend.Logic.Services.Connections
+@using ProjectAveryCommon.Model.Entity.Pocos
+@inject ILogger<Entity> _logger
+@inject IEntityConnectionService _entityConnection
+
 <CascadingValue Value="Value">
-<div class="flex h-full">
-    @* Center Part *@
-    <div class="flex-1 flex flex-col">
-        @* Top Bar *@
-        <div class="flex gap-6 mb-5">
-            @* Navigation *@
-            <IconTabControl OnTabSelected="EntityTabSelected">
-                <IconTab RelatedType="typeof(ConsoleTab)" IconCharacter="'T'"></IconTab>
-                <IconTab IconCharacter="'S'"></IconTab>
-                <IconTab IconCharacter="'P'"></IconTab>
-                <IconTab IconCharacter="'W'"></IconTab>
-            </IconTabControl>
-            @* Entity Overview *@
-            <div class="flex-1 max-w-3xl p-2 bg-forkBlue flex justify-between items-center">
-                <div class="flex gap-2 p-1">
-                    <IconButton Size="25" IconSize="11" IconChar="'s'"></IconButton>
-                    <IconButton Size="25" IconSize="9" IconChar="'h'"></IconButton>
-                    <IconButton Size="25" IconSize="13" IconChar="'r'"></IconButton>
+    <div class="flex h-full">
+        @* Center Part *@
+        <div class="flex-1 flex flex-col">
+            @* Top Bar *@
+            <div class="flex gap-6 mb-5">
+                @* Navigation *@
+                <IconTabControl OnTabSelected="EntityTabSelected">
+                    <IconTab RelatedType="typeof(ConsoleTab)" IconCharacter="'T'"></IconTab>
+                    <IconTab IconCharacter="'S'"></IconTab>
+                    <IconTab IconCharacter="'P'"></IconTab>
+                    <IconTab IconCharacter="'W'"></IconTab>
+                </IconTabControl>
+                @* Entity Overview *@
+                <div class="flex-1 max-w-3xl p-2 bg-forkBlue flex justify-between items-center">
+                    <div class="flex gap-2 p-1">
+                        <IconButton Size="25" IconSize="11" IconChar="'s'" OnClickMethod="StartServer"></IconButton>
+                        <IconButton Size="25" IconSize="9" IconChar="'h'"></IconButton>
+                        <IconButton Size="25" IconSize="13" IconChar="'r'"></IconButton>
+                    </div>
+                    <span class="font-bold text-md text-label whitespace-nowrap">@Value?.Name</span>
+                    <IconButton Size="30" NoBackground="true" IconChar="'D'" IconSize="19" HoverColor="text-red"></IconButton>
                 </div>
-                <span class="font-bold text-md text-label whitespace-nowrap">@Value?.Name</span>
-                <IconButton Size="30" NoBackground="true" IconChar="'D'" IconSize="19" HoverColor="text-red"></IconButton>
             </div>
+            @* Content *@
+            @if (SelectedEntityTabType != null)
+            {
+                <DynamicComponent Type="SelectedEntityTabType"></DynamicComponent>
+            }
         </div>
-        @* Content *@
-        @if (SelectedEntityTabType != null)
-        {
-            <DynamicComponent Type="SelectedEntityTabType"></DynamicComponent>
-        }
+
+        @* Player list *@
+        <div class="w-80">
+            @* Top Bar *@
+
+            @* Content *@
+
+        </div>
     </div>
 
-    @* Player list *@
-    <div class="w-80">
-        @* Top Bar *@
-
-        @* Content *@
-
-    </div>
-</div>
-    
 </CascadingValue>
 
 @code {
@@ -52,6 +56,18 @@
     private void EntityTabSelected(IconTab tab)
     {
         SelectedEntityTabType = tab.RelatedType;
+    }
+
+    private async Task StartServer(IconButton button)
+    {
+        try
+        {
+            await _entityConnection.StartEntityAsync(Value!.Id);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, $"Error while starting server {Value?.Name}");
+        }
     }
 
 }
