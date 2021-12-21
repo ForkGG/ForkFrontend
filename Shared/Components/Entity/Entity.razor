@@ -19,12 +19,12 @@
                 @* Entity Overview *@
                 <div class="flex-1 max-w-3xl p-2 bg-forkBlue flex justify-between items-center">
                     <div class="flex gap-2 p-1">
-                        <IconButton Size="25" IconSize="11" IconChar="'s'" OnClickMethod="StartServer"></IconButton>
-                        <IconButton Size="25" IconSize="9" IconChar="'h'"></IconButton>
-                        <IconButton Size="25" IconSize="13" IconChar="'r'"></IconButton>
+                        <IconButton Size="25" IconSize="11" IconChar="'s'" HoverColor="status-green" OnClickMethod="StartServer"></IconButton>
+                        <IconButton Size="25" IconSize="9" IconChar="'h'" HoverColor="status-red"></IconButton>
+                        <IconButton Size="25" IconSize="13" IconChar="'r'" HoverColor="status-orange"></IconButton>
                     </div>
                     <span class="font-bold text-md text-label whitespace-nowrap">@Value?.Name</span>
-                    <IconButton Size="30" NoBackground="true" IconChar="'D'" IconSize="19" HoverColor="text-red"></IconButton>
+                    <IconButton Size="30" NoBackground="true" IconChar="'D'" IconSize="19" HoverColor="status-red"></IconButton>
                 </div>
             </div>
             @* Content *@

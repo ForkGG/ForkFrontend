@@ -1,4 +1,5 @@
 ﻿@using ProjectAveryFrontend.Logic.Services.Notifications
+@using ProjectAveryFrontend.Logic.Services.Connections
 @using ProjectAveryCommon.Model.Entity.Pocos
 @using ProjectAveryCommon.Model.Entity.Transient.Console
 @using ProjectAveryCommon.Model.Notifications.EntityNotifications
@@ -8,6 +9,7 @@
 @inject IJSRuntime _js
 @inject INotificationService _notificationService
 @inject ILogger<ConsoleOut> _logger
+@inject IEntityConnectionService _entityConnection
 
 <div class="flex-1 flex flex-col console-out-container clipping">
     @*Controls*@
@@ -56,11 +58,7 @@
         if (_isFirstRender)
         {
             _isFirstRender = false;
-    // TODO CKE initialize console with existing lines (API call)
-            for (int i = 0; i < 500; i++)
-            {
-                ConsoleMessages.Add(new ConsoleMessage($"{Entity?.Name} Message {i}", ConsoleMessageType.UserInput));
-            }
+            ConsoleMessages = await _entityConnection.GetConsoleMessagesAsync(Entity!.Id);
             await _js.InvokeVoidAsync("InitConsoleClusterize", ConsoleMessages.Select(ConsoleMessageToHtml).ToList(), _consoleScroller, _consoleContent);
 
     // Scroll to bottom
@@ -68,6 +66,7 @@
             await Task.Delay(1);
     // THE ABSOLUTE BOTTOM!!!
             await ScrollToBottom();
+            StateHasChanged();
         }
     }
 

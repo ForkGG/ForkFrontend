@@ -1,5 +1,4 @@
-﻿using System.Text;
-using ProjectAveryCommon.ExtensionMethods;
+﻿using ProjectAveryCommon.Model.Entity.Transient.Console;
 using ProjectAveryCommon.Model.Payloads.Entity;
 using ProjectAveryFrontend.Logic.Services.HttpsClients;
 
@@ -9,6 +8,23 @@ public class EntityConnectionService : AbstractConnectionService, IEntityConnect
 {
     public EntityConnectionService(ILogger<EntityConnectionService> logger, BackendClient client) : base(logger, client)
     {
+    }
+
+    public async Task<List<ConsoleMessage>> GetConsoleMessagesAsync(ulong entityId)
+    {
+        try
+        {
+            var result = await GetFromJsonAsync<List<ConsoleMessage>>($"/v1/entity/{entityId}/console");
+            if (result != null)
+                return result;
+        }
+        catch (Exception e)
+        {
+            //TODO properly display errors
+            _logger.LogError(e, "Error while getting Console Output");
+        }
+
+        return new List<ConsoleMessage>();
     }
 
     public async Task<bool> SubmitConsoleInAsync(string message, ulong entityId)
@@ -28,9 +44,7 @@ public class EntityConnectionService : AbstractConnectionService, IEntityConnect
 
     public async Task<ulong> CreateServerAsync(CreateServerPayload createServerPayload)
     {
-        var response =
-            await _client.PostAsync("/v1/entity/createserver",
-                new StringContent(createServerPayload.ToJson(), Encoding.UTF8, "application/json"));
+        var response = await PostAsJsonAsync("/v1/entity/createserver", createServerPayload);
         return ulong.Parse(await response.Content.ReadAsStringAsync());
     }
 
