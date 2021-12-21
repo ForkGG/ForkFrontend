@@ -26,30 +26,33 @@ public class ApplicationNotificationService : INotificationService
         _logger = logger;
         _applicationState = applicationState;
         _cancellationTokenSource = new CancellationTokenSource();
-        RegisteredHandlers = new Dictionary<Type, List<Func<AbstractNotification, Task>>>();
+        RegisteredHandlers = new List<INotificationHandler>();
     }
 
-    private Dictionary<Type, List<Func<AbstractNotification, Task>>> RegisteredHandlers { get; }
+    private List<INotificationHandler> RegisteredHandlers { get; }
 
-    public void Register<T>(Func<AbstractNotification, Task> handler) where T : AbstractNotification
+    public void Register<T>(Func<T, Task> handler) where T : AbstractNotification
     {
         _logger.LogDebug($"Registering new NotificationHandler `{handler.Method.Name}` for {typeof(T)}");
-        if (!RegisteredHandlers.ContainsKey(typeof(T)))
+
+        if (RegisteredHandlers.FirstOrDefault(h => h.GetType() == typeof(NotificationHandler<T>)) is not
+            NotificationHandler<T> notificationHandler)
         {
-            var newHandlers = new List<Func<AbstractNotification, Task>>();
-            RegisteredHandlers[typeof(T)] = newHandlers;
+            notificationHandler = new NotificationHandler<T>();
+            RegisteredHandlers.Add(notificationHandler);
         }
 
-        RegisteredHandlers[typeof(T)].Add(handler);
+        notificationHandler.Handlers.Add(handler);
     }
 
     public void Unregister<T>(object caller) where T : AbstractNotification
     {
-        if (RegisteredHandlers.ContainsKey(typeof(T)))
+        if (RegisteredHandlers.FirstOrDefault(h => h.GetType() == typeof(NotificationHandler<T>)) is
+            NotificationHandler<T> notificationHandler)
         {
+            var count = notificationHandler.Handlers.RemoveAll(f => f.Target == caller);
             _logger.LogDebug(
-                $"Unregistering {RegisteredHandlers[typeof(T)].Count(e => e.Target == caller)} NotificationHandlers for {typeof(T)}");
-            RegisteredHandlers[typeof(T)].RemoveAll(e => e.Target == caller);
+                $"Unregistered {count} NotificationHandlers for {typeof(T)}");
         }
     }
 
@@ -87,12 +90,8 @@ public class ApplicationNotificationService : INotificationService
             return;
         }
 
-        var handlers = RegisteredHandlers.ContainsKey(notification.GetType())
-            ? RegisteredHandlers[notification.GetType()]
-            : new List<Func<AbstractNotification, Task>>();
-        _logger.LogDebug($"Handling {notification.GetType()} with {handlers.Count} handlers\n{notification.ToJson()}");
-        foreach (Func<AbstractNotification, Task> handler in handlers)
-            await handler.Invoke(notification);
+        // Make sure only handlers of the notifications type are called
+        RegisteredHandlers.FirstOrDefault(h => h.Type == notification.GetType())?.CallHandlers(notification);
     }
 
     /// <summary>

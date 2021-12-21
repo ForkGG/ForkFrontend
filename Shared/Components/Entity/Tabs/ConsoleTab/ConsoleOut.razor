@@ -1,9 +1,8 @@
-﻿@using ProjectAveryCommon.ExtensionMethods
-@using ProjectAveryCommon.Model.Entity.Enums.Console
+﻿@using ProjectAveryFrontend.Logic.Services.Notifications
 @using ProjectAveryCommon.Model.Entity.Pocos
 @using ProjectAveryCommon.Model.Entity.Transient.Console
 @using ProjectAveryCommon.Model.Notifications.EntityNotifications
-@using ProjectAveryFrontend.Logic.Services.Notifications
+@using ProjectAveryCommon.Model.Entity.Enums.Console
 @implements IAsyncDisposable
 
 @inject IJSRuntime _js
@@ -46,12 +45,7 @@
 
     protected override void OnInitialized()
     {
-        _notificationService.Register<ConsoleAddNotification>(async notification =>
-        {
-            if (notification is ConsoleAddNotification consoleAddNotification)
-                await HandleNewConsoleLine(consoleAddNotification);
-            _logger.LogError($"Not a console notification: {notification.ToJson()}");
-        });
+        _notificationService.Register<ConsoleAddNotification>(async notification => { await HandleNewConsoleLine(notification); });
     }
 
 
