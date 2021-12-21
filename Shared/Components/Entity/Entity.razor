@@ -1,10 +1,11 @@
 ﻿@using ProjectAveryFrontend.Logic.Services.Connections
 @using ProjectAveryCommon.Model.Entity.Pocos
+@using ProjectAveryFrontend.Shared.Components.Entity.Tabs.Playerlist
 @inject ILogger<Entity> _logger
 @inject IEntityConnectionService _entityConnection
 
 <CascadingValue Value="Value">
-    <div class="flex h-full">
+    <div class="flex h-full gap-6">
         @* Center Part *@
         <div class="flex-1 flex flex-col">
             @* Top Bar *@
@@ -35,11 +36,22 @@
         </div>
 
         @* Player list *@
-        <div class="w-80">
+        <div class="w-60">
             @* Top Bar *@
+            <div class="mb-5">
+                <IconTabControl OnTabSelected="PlayerListTabSelected">
+                    <IconTab RelatedType="typeof(Playerlist)" IconCharacter="'p'"></IconTab>
+                    <IconTab IconCharacter="'b'"></IconTab>
+                    <IconTab IconCharacter="'w'"></IconTab>
+                </IconTabControl>
+            </div>
+
 
             @* Content *@
-
+            @if (SelectedPlayerListTabType != null)
+            {
+                <DynamicComponent Type="SelectedPlayerListTabType"></DynamicComponent>
+            }
         </div>
     </div>
 
@@ -52,10 +64,16 @@
     public IEntity? Value { get; set; }
 
     private Type? SelectedEntityTabType { get; set; }
+    private Type? SelectedPlayerListTabType { get; set; }
 
     private void EntityTabSelected(IconTab tab)
     {
         SelectedEntityTabType = tab.RelatedType;
+    }
+
+    private void PlayerListTabSelected(IconTab tab)
+    {
+        SelectedPlayerListTabType = tab.RelatedType;
     }
 
     private async Task StartServer(IconButton button)

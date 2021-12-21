@@ -27,7 +27,7 @@ public partial class Index : ComponentBase
                 SelectedEntity = _applicationState.ApplicationState.Entities.FirstOrDefault();
             StateHasChanged();
         };
-        _ = NotificationService.StartupAsync();
+        await NotificationService.StartupAsync();
     }
 
     private async Task OnSelectEntity(IEntity entity)

@@ -67,12 +67,20 @@
     }
 
     .performance-background::before {
-        clip-path: polygon(0 0, 100% 0, 100% calc(100% - 30px), calc(100% - 30px) 100%, 0 100%);
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - 40px), calc(100% - 40px) 100%, 0 100%);
+    }
+
+    .ip-container::before {
+        clip-path: polygon(0 25px, 60px 25px, 85px 0, 100% 0, 100% 100%, 0 100%);
+    }
+
+    .performance-container {
+        min-height: 112px;
     }
 
     .performance-circle::before {
-        @apply w-16;
-        @apply h-16;
+        @apply w-20;
+        @apply h-20;
         @apply rounded-full;
         @apply bg-opacity-20 !important;
         @apply bg-status-green;
@@ -128,6 +136,14 @@
 
     .scroll-left > div {
         direction: ltr;
+    }
+
+    .scroll-hidden {
+        scrollbar-width: none;
+    }
+
+    .scroll-hidden::-webkit-scrollbar {
+        width: 0;
     }
 
     /* --- Inputs --- */
