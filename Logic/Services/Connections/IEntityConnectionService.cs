@@ -9,4 +9,6 @@ public interface IEntityConnectionService
     public Task<bool> SubmitConsoleInAsync(string message, ulong entityId);
     public Task<ulong> CreateServerAsync(CreateServerPayload payload);
     public Task<bool> StartEntityAsync(ulong entityId);
+    public Task<bool> StopEntityAsync(ulong entityId);
+    public Task<bool> RestartEntityAsync(ulong entityId);
 }

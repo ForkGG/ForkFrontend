@@ -53,4 +53,16 @@ public class EntityConnectionService : AbstractConnectionService, IEntityConnect
         var response = await _client.PostAsync($"/v1/entity/{entityId}/start", null);
         return response.IsSuccessStatusCode;
     }
+
+    public async Task<bool> StopEntityAsync(ulong entityId)
+    {
+        var response = await _client.PostAsync($"/v1/entity/{entityId}/stop", null);
+        return response.IsSuccessStatusCode;
+    }
+
+    public async Task<bool> RestartEntityAsync(ulong entityId)
+    {
+        var response = await _client.PostAsync($"/v1/entity/{entityId}/restart", null);
+        return response.IsSuccessStatusCode;
+    }
 }

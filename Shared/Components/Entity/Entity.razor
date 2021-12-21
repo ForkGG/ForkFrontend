@@ -20,8 +20,8 @@
                 <div class="flex-1 max-w-3xl p-2 bg-forkBlue flex justify-between items-center">
                     <div class="flex gap-2 p-1">
                         <IconButton Size="25" IconSize="11" IconChar="'s'" HoverColor="status-green" OnClickMethod="StartServer"></IconButton>
-                        <IconButton Size="25" IconSize="9" IconChar="'h'" HoverColor="status-red"></IconButton>
-                        <IconButton Size="25" IconSize="13" IconChar="'r'" HoverColor="status-orange"></IconButton>
+                        <IconButton Size="25" IconSize="9" IconChar="'h'" HoverColor="status-red" OnClickMethod="StopServer"></IconButton>
+                        <IconButton Size="25" IconSize="13" IconChar="'r'" HoverColor="status-orange" OnClickMethod="RestartServer"></IconButton>
                     </div>
                     <span class="font-bold text-md text-label whitespace-nowrap">@Value?.Name</span>
                     <IconButton Size="30" NoBackground="true" IconChar="'D'" IconSize="19" HoverColor="status-red"></IconButton>
@@ -67,6 +67,30 @@
         catch (Exception e)
         {
             _logger.LogError(e, $"Error while starting server {Value?.Name}");
+        }
+    }
+
+    private async Task StopServer(IconButton button)
+    {
+        try
+        {
+            await _entityConnection.StopEntityAsync(Value!.Id);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, $"Error while stopping server {Value?.Name}");
+        }
+    }
+
+    private async Task RestartServer(IconButton button)
+    {
+        try
+        {
+            await _entityConnection.RestartEntityAsync(Value!.Id);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, $"Error while restarting server {Value?.Name}");
         }
     }
 
