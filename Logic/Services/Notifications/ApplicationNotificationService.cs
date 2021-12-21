@@ -104,6 +104,7 @@ public class ApplicationNotificationService : INotificationService
         if (_webSocket == null) yield break;
         await _webSocket.ConnectAsync(_webSocketUri, cancellationToken);
         _applicationState.WebsocketStatus = WebsocketStatus.Connected;
+        await _applicationState.UpdateState();
         // TODO CKE actual token
         await SendMessageAsync("dummyToken", cancellationToken);
         var buffer = new ArraySegment<byte>(new byte[BUFFER_SIZE]);

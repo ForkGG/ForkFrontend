@@ -17,11 +17,16 @@ public partial class Index : ComponentBase
 
     protected override async Task OnInitializedAsync()
     {
-        //To simulate a network delay
-        //await Task.Delay(1000);
         _applicationState.AppStatusChanged += StateHasChanged;
-        await _applicationState.UpdateState();
-        SelectedEntity = _applicationState.ApplicationState.Entities.FirstOrDefault();
+        _applicationState.AppStateChanged += () =>
+        {
+            if (SelectedEntity != null &&
+                _applicationState.ApplicationState.Entities.Any(e => e.Id == SelectedEntity.Id))
+                SelectedEntity = _applicationState.ApplicationState.Entities.First(e => e.Id == SelectedEntity.Id);
+            else
+                SelectedEntity = _applicationState.ApplicationState.Entities.FirstOrDefault();
+            StateHasChanged();
+        };
         _ = NotificationService.StartupAsync();
     }
 

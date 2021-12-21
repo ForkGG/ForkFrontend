@@ -5,14 +5,17 @@ namespace ProjectAveryFrontend.Logic.Services.Managers;
 
 public interface IApplicationStateManager
 {
-    public delegate void HandleAppStatusChanged();
+    public delegate void HandleAppStateChanged();
 
-    public event HandleAppStatusChanged AppStatusChanged;
+    public delegate void HandleAppStatusChanged();
 
     public bool IsApplicationReady { get; }
     public State ApplicationState { get; }
     public WebsocketStatus WebsocketStatus { get; set; }
     public ApplicationStatus ApplicationStatus { get; }
+
+    public event HandleAppStatusChanged AppStatusChanged;
+    public event HandleAppStateChanged AppStateChanged;
 
     public Task UpdateState();
 }

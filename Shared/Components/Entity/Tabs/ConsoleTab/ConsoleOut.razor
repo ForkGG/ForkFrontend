@@ -62,6 +62,11 @@
                 ConsoleMessages.Add(new ConsoleMessage($"{Entity?.Name} Message {i}", ConsoleMessageType.UserInput));
             }
             await _js.InvokeVoidAsync("InitConsoleClusterize", ConsoleMessages.Select(ConsoleMessageToHtml).ToList(), _consoleScroller, _consoleContent);
+
+    // Scroll to bottom
+            await ScrollToBottom();
+            await Task.Delay(1);
+    // THE ABSOLUTE BOTTOM!!!
             await ScrollToBottom();
         }
     }
@@ -109,7 +114,25 @@
     private string ConsoleMessageToHtml(ConsoleMessage message)
     {
         string escapedMessage = message.Message.Replace("<", "&lt;").Replace("\"", "&quot;").Replace(">", "&gt;");
-        return $"<div class=\"block monospace leading-tight text-sm\">{escapedMessage}</div>";
+        string colorClass = MessageTypeToConsoleColor(message.MessageType);
+        return $"<div class=\"block monospace leading-tight text-sm {colorClass}\">{escapedMessage}</div>";
+    }
+
+    private string MessageTypeToConsoleColor(ConsoleMessageType type)
+    {
+        switch (type)
+        {
+            case ConsoleMessageType.Success:
+                return "text-text-green";
+            case ConsoleMessageType.Warning:
+                return "text-text-orange";
+            case ConsoleMessageType.Error:
+                return "text-text-red";
+            case ConsoleMessageType.UserInput:
+                return "opacity-70";
+            default:
+                return "";
+        }
     }
 
 }

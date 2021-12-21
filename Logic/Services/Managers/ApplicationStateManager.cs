@@ -6,19 +6,21 @@ namespace ProjectAveryFrontend.Logic.Services.Managers;
 
 public class ApplicationStateManager : IApplicationStateManager
 {
-    private readonly ILogger<ApplicationStateManager> _logger;
     private readonly IApplicationConnectionService _applicationConnection;
+    private readonly ILogger<ApplicationStateManager> _logger;
 
-    public ApplicationStateManager(ILogger<ApplicationStateManager> logger, IApplicationConnectionService applicationConnection)
+    private bool _isStateReady;
+    private WebsocketStatus _websocketStatus = WebsocketStatus.Disconnected;
+
+    public ApplicationStateManager(ILogger<ApplicationStateManager> logger,
+        IApplicationConnectionService applicationConnection)
     {
         _logger = logger;
         _applicationConnection = applicationConnection;
     }
 
-    private bool _isStateReady = false;
-    private WebsocketStatus _websocketStatus = WebsocketStatus.Disconnected;
-
     public event IApplicationStateManager.HandleAppStatusChanged? AppStatusChanged;
+    public event IApplicationStateManager.HandleAppStateChanged? AppStateChanged;
     public bool IsApplicationReady => _isStateReady && WebsocketStatus == WebsocketStatus.Connected;
     public State ApplicationState { get; private set; }
 
@@ -32,21 +34,16 @@ public class ApplicationStateManager : IApplicationStateManager
         }
     }
 
-    public ApplicationStatus ApplicationStatus {
+    public ApplicationStatus ApplicationStatus
+    {
         get
         {
-            if (!_isStateReady)
-            {
-                return ApplicationStatus.RetrievingState;
-            }
-            if (WebsocketStatus != WebsocketStatus.Connected)
-            {
-                return ApplicationStatus.WaitingForWebsocket;
-            }
+            if (!_isStateReady) return ApplicationStatus.RetrievingState;
+            if (WebsocketStatus != WebsocketStatus.Connected) return ApplicationStatus.WaitingForWebsocket;
             return ApplicationStatus.Ready;
         }
     }
-    
+
     public async Task UpdateState()
     {
         _isStateReady = false;
@@ -54,5 +51,6 @@ public class ApplicationStateManager : IApplicationStateManager
         ApplicationState = await _applicationConnection.GetApplicationState();
         _isStateReady = true;
         AppStatusChanged?.Invoke();
+        AppStateChanged?.Invoke();
     }
 }
