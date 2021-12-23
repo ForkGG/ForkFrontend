@@ -1,13 +1,15 @@
-﻿@using ProjectAveryCommon.Model.Entity.Pocos.Player
+﻿@using ProjectAveryCommon.Model.Entity.Pocos
+@using ProjectAveryCommon.Model.Entity.Pocos.Player
 <div class="h-full bg-forkBlue pt-3">
     @* Player count *@
-    <span class="px-7 py-3 text-label-hover">23 / 100 - Online</span>
+    <span class="px-7 py-3 text-label-hover">@(Server?.ServerPlayers?.Count(p => p.IsOnline) ?? 0) / @(Server?.VanillaSettings?.MaxPlayers ?? 0) - Online</span>
 
     @* Player list *@
     <div class="h-full overflow-y-auto mt-3">
-        @if (PlayerList != null)
+        @if (Server?.ServerPlayers != null)
         {
-            foreach (var player in PlayerList)
+            Server.ServerPlayers.Sort();
+            foreach (var player in Server.ServerPlayers)
             {
                 <CascadingValue Value="this">
                     <PlayerComponent Value="player"></PlayerComponent>
@@ -18,22 +20,13 @@
 </div>
 
 @code {
-    public List<ServerPlayer>? PlayerList { get; set; }
+
+    [CascadingParameter]
+    public IEntity? Entity { get; set; }
+
+    private Server? Server => Entity as Server;
 
     public ServerPlayer? ActivePlayer { get; set; }
-
-    protected override void OnInitialized()
-    {
-        PlayerList = new List<ServerPlayer>();
-        for (int i = 0; i < 10; i++)
-        {
-            Player p = new Player { Name = $"Player {i}" };
-            PlayerList.Add(new ServerPlayer { Player = p, IsOnline = i % 2 == 0, IsOp = i % 5 == 0 });
-        }
-        PlayerList.Sort();
-        ActivePlayer = PlayerList.FirstOrDefault();
-        base.OnInitialized();
-    }
 
     public void SelectPlayer(PlayerComponent playerComponent)
     {

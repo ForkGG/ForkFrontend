@@ -1,6 +1,5 @@
 ﻿@using ProjectAveryFrontend.Logic.Services.Connections
 @using ProjectAveryCommon.Model.Entity.Pocos
-@using ProjectAveryFrontend.Shared.Components.Entity.Tabs.Playerlist
 @inject ILogger<Entity> _logger
 @inject IEntityConnectionService _entityConnection
 
@@ -36,23 +35,26 @@
         </div>
 
         @* Player list *@
-        <div class="w-60">
-            @* Top Bar *@
-            <div class="mb-5">
-                <IconTabControl OnTabSelected="PlayerListTabSelected">
-                    <IconTab RelatedType="typeof(Playerlist)" IconCharacter="'p'"></IconTab>
-                    <IconTab IconCharacter="'b'"></IconTab>
-                    <IconTab IconCharacter="'w'"></IconTab>
-                </IconTabControl>
+        @if (SelectedEntityTabType == typeof(ConsoleTab) && Value is Server)
+        {
+            <div class="w-60">
+                @* Top Bar *@
+                <div class="mb-5">
+                    <IconTabControl OnTabSelected="PlayerListTabSelected">
+                        <IconTab RelatedType="typeof(Playerlist)" IconCharacter="'p'"></IconTab>
+                        <IconTab IconCharacter="'b'"></IconTab>
+                        <IconTab IconCharacter="'w'"></IconTab>
+                    </IconTabControl>
+                </div>
+
+
+                @* Content *@
+                @if (SelectedPlayerListTabType != null)
+                {
+                    <DynamicComponent Type="SelectedPlayerListTabType"></DynamicComponent>
+                }
             </div>
-
-
-            @* Content *@
-            @if (SelectedPlayerListTabType != null)
-            {
-                <DynamicComponent Type="SelectedPlayerListTabType"></DynamicComponent>
-            }
-        </div>
+        }
     </div>
 
 </CascadingValue>
