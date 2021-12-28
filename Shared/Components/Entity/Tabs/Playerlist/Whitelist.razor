@@ -1,0 +1,76 @@
+﻿@using ProjectAveryFrontend.Logic.Services.Notifications
+@using ProjectAveryCommon.Model.Entity.Pocos
+@using ProjectAveryCommon.Model.Entity.Pocos.Player
+@using ProjectAveryCommon.Model.Notifications.EntityNotifications.PlayerNotifications
+@using ProjectAveryCommon.Model.Entity.Enums.Player
+@implements ISimplePlayerlist
+@inject INotificationService _notificationService
+<div class="h-full bg-forkBlue pt-3">
+    @* Whitelist count *@
+    <span class="px-7 py-3 text-label-hover">@(Server?.Whitelist?.Count ?? 0) - Whitelisted</span>
+    @* Player list *@
+    <div class="h-full overflow-y-auto mt-3">
+        @if (Server?.Whitelist != null)
+        {
+            Server.Whitelist.Sort();
+            foreach (var player in Server.Whitelist)
+            {
+                <CascadingValue Value="this">
+                    <PlayerComponent Value="player"></PlayerComponent>
+                </CascadingValue>
+            }
+        }
+    </div>
+</div>
+
+@code {
+
+    [CascadingParameter]
+    public IEntity? Entity { get; set; }
+
+    private Server? Server => Entity as Server;
+
+    public Player? ActivePlayer { get; set; }
+
+    public void SelectPlayer(PlayerComponent playerComponent)
+    {
+        ActivePlayer = playerComponent.Value;
+        StateHasChanged();
+    }
+
+    protected override void OnInitialized()
+    {
+        _notificationService.Register<UpdateWhitelistPlayerNotification>(HandlePlayerUpdate);
+    }
+
+    private async Task HandlePlayerUpdate(UpdateWhitelistPlayerNotification notification)
+    {
+        if (Server == null)
+            return;
+        Server.Whitelist ??= new List<Player>();
+
+        if (notification.UpdateType == PlayerlistUpdateType.Remove)
+        {
+            Server.Whitelist.RemoveAll(p => p.Uid == notification.Player.Uid);
+        }
+        else
+        {
+            var existing = Server.Whitelist.FirstOrDefault(p => p.Uid == notification.Player.Uid);
+    // Update
+            if (existing != null)
+            {
+                existing.Head = notification.Player.Head;
+                existing.Name = notification.Player.Name;
+                existing.LastUpdated = notification.Player.LastUpdated;
+                existing.IsOfflinePlayer = notification.Player.IsOfflinePlayer;
+            }
+    // Add
+            else
+            {
+                Server.Whitelist.Add(notification.Player);
+            }
+        }
+        StateHasChanged();
+    }
+
+}
