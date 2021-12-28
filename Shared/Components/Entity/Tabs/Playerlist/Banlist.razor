@@ -45,7 +45,7 @@
 
     private async Task HandlePlayerUpdate(UpdateBanlistPlayerNotification notification)
     {
-        if (Server == null)
+        if (Server == null || notification.EntityId != Server.Id)
             return;
         Server.Banlist ??= new List<Player>();
 

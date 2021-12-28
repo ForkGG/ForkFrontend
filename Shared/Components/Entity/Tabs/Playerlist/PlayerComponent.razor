@@ -5,7 +5,9 @@
 <div class="hover:text-label-hover @(IsActive ? "bg-forkBlue-hover text-label-hover" : "text-text-dark cursor-pointer")" @onclick="OnClick">
     <div class="flex px-7 py-3">
         @* Player Head *@
-        <div class="mx-2"></div>
+        <div class="mx-2">
+            <img class="w-6 pixelated" src="@($"data:image/png;base64,{Value?.Head}")" alt=""/>
+        </div>
 
         @* Player name *@
         <div>

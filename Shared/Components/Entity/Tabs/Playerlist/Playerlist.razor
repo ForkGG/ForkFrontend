@@ -44,7 +44,7 @@
 
     private async Task HandlePlayerUpdate(UpdatePlayerNotification notification)
     {
-        if (Server?.ServerPlayers == null)
+        if (Server?.ServerPlayers == null || notification.EntityId != Server.Id)
             return;
 
         var existing = Server?.ServerPlayers.FirstOrDefault(p => p.Player.Uid == notification.ServerPlayer.Player.Uid);

@@ -8,7 +8,9 @@
         <div style="height: 8px; width: 8px;" class="self-center rounded-full @(Value is {IsOnline: true } ? "bg-status-green" : "bg-status-inactive")"></div>
 
         @* Player Head *@
-        <div class="mx-2"></div>
+        <div class="mx-2 self-center">
+            <img class="w-8 pixelated @(Value is {IsOnline: true } ? "" : "opacity-20")" src="@($"data:image/png;base64,{Value?.Player.Head}")" alt=""/>
+        </div>
 
         @* Player name *@
         <div>

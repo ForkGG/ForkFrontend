@@ -32,6 +32,11 @@
     .icon {
         font-family: "icomoon", sans-serif;
     }
+
+    .pixelated {
+        -ms-interpolation-mode: nearest-neighbor;
+        image-rendering: pixelated;
+    }
 }
 
 @layer components {
