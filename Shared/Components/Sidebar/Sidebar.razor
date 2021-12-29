@@ -2,6 +2,7 @@
 @using ForkCommon.Model.Entity.Pocos
 @using ForkCommon.Model.Entity.Pocos.ServerSettings
 @using ForkCommon.Model.Payloads.Entity
+@using ForkCommon.Model.Entity.Enums
 @inject ILogger<Sidebar> _logger
 @inject IEntityConnectionService _entityConnection
 
@@ -62,8 +63,7 @@
         var createPayload = new CreateServerPayload();
         createPayload.ServerName = "test";
         createPayload.JavaSettings = new JavaSettings();
-        createPayload.ServerVersion = new ServerVersion();
-        createPayload.ServerVersion.JarLink = "https://launcher.mojang.com/v1/objects/125e5adf40c659fd3bce3e66e67a16bb49ecc1b9/server.jar";
+        createPayload.ServerVersion = new ServerVersion{Build = 0, Type = VersionType.Vanilla, Version = "1.18.1", JarLink = "https://launcher.mojang.com/v1/objects/125e5adf40c659fd3bce3e66e67a16bb49ecc1b9/server.jar" };
         createPayload.VanillaSettings = new VanillaSettings("world");
 
         try
