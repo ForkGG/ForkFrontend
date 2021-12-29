@@ -1,4 +1,4 @@
-﻿namespace ProjectAveryFrontend.Logic.Services.Translation;
+﻿namespace ForkFrontend.Logic.Services.Translation;
 
 public interface ITranslationService
 {

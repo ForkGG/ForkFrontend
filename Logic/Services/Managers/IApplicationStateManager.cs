@@ -1,7 +1,7 @@
-﻿using ProjectAveryCommon.Model.Application;
-using ProjectAveryFrontend.Model;
+﻿using ForkCommon.Model.Application;
+using ForkFrontend.Model;
 
-namespace ProjectAveryFrontend.Logic.Services.Managers;
+namespace ForkFrontend.Logic.Services.Managers;
 
 public interface IApplicationStateManager
 {

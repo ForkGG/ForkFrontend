@@ -1,11 +1,11 @@
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using ProjectAveryFrontend;
-using ProjectAveryFrontend.Logic.Services.Connections;
-using ProjectAveryFrontend.Logic.Services.HttpsClients;
-using ProjectAveryFrontend.Logic.Services.Managers;
-using ProjectAveryFrontend.Logic.Services.Notifications;
-using ProjectAveryFrontend.Logic.Services.Translation;
+using ForkFrontend;
+using ForkFrontend.Logic.Services.Connections;
+using ForkFrontend.Logic.Services.HttpsClients;
+using ForkFrontend.Logic.Services.Managers;
+using ForkFrontend.Logic.Services.Notifications;
+using ForkFrontend.Logic.Services.Translation;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");

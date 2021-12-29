@@ -1,6 +1,6 @@
-﻿using ProjectAveryCommon.Model.Application;
+﻿using ForkCommon.Model.Application;
 
-namespace ProjectAveryFrontend.Logic.Services.Connections;
+namespace ForkFrontend.Logic.Services.Connections;
 
 public interface IApplicationConnectionService
 {

@@ -1,7 +1,7 @@
-﻿using ProjectAveryCommon.Model.Entity.Transient.Console;
-using ProjectAveryCommon.Model.Payloads.Entity;
+﻿using ForkCommon.Model.Entity.Transient.Console;
+using ForkCommon.Model.Payloads.Entity;
 
-namespace ProjectAveryFrontend.Logic.Services.Connections;
+namespace ForkFrontend.Logic.Services.Connections;
 
 public interface IEntityConnectionService
 {

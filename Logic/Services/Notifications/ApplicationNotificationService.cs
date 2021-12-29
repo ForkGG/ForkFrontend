@@ -2,12 +2,12 @@
 using System.Net.WebSockets;
 using System.Runtime.CompilerServices;
 using System.Text;
-using ProjectAveryCommon.ExtensionMethods;
-using ProjectAveryCommon.Model.Notifications;
-using ProjectAveryFrontend.Logic.Services.Managers;
-using ProjectAveryFrontend.Model;
+using ForkCommon.ExtensionMethods;
+using ForkCommon.Model.Notifications;
+using ForkFrontend.Logic.Services.Managers;
+using ForkFrontend.Model;
 
-namespace ProjectAveryFrontend.Logic.Services.Notifications;
+namespace ForkFrontend.Logic.Services.Notifications;
 
 public class ApplicationNotificationService : INotificationService
 {

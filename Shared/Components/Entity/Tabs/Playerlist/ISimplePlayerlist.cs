@@ -1,6 +1,6 @@
-﻿using ProjectAveryCommon.Model.Entity.Pocos.Player;
+﻿using ForkCommon.Model.Entity.Pocos.Player;
 
-namespace ProjectAveryFrontend.Shared.Components.Entity.Tabs.Playerlist;
+namespace ForkFrontend.Shared.Components.Entity.Tabs.Playerlist;
 
 public interface ISimplePlayerlist
 {

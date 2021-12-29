@@ -1,6 +1,6 @@
-﻿using ProjectAveryCommon.Model.Notifications;
+﻿using ForkCommon.Model.Notifications;
 
-namespace ProjectAveryFrontend.Model;
+namespace ForkFrontend.Model;
 
 public class NotificationHandler<T> : INotificationHandler where T : AbstractNotification
 {

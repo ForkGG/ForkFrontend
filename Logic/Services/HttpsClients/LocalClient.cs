@@ -1,4 +1,4 @@
-﻿namespace ProjectAveryFrontend.Logic.Services.HttpsClients;
+﻿namespace ForkFrontend.Logic.Services.HttpsClients;
 
 public class LocalClient
 {

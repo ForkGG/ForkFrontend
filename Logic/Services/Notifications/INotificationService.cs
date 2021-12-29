@@ -1,6 +1,6 @@
-﻿using ProjectAveryCommon.Model.Notifications;
+﻿using ForkCommon.Model.Notifications;
 
-namespace ProjectAveryFrontend.Logic.Services.Notifications;
+namespace ForkFrontend.Logic.Services.Notifications;
 
 public interface INotificationService
 {

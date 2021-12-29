@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
-using ProjectAveryFrontend.Logic.Services.HttpsClients;
+using ForkFrontend.Logic.Services.HttpsClients;
 
-namespace ProjectAveryFrontend.Logic.Services.Translation;
+namespace ForkFrontend.Logic.Services.Translation;
 
 public class DefaultTranslationService : ITranslationService
 {

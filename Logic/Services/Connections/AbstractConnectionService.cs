@@ -1,9 +1,9 @@
 ﻿using System.Net.Http.Headers;
 using System.Text;
-using ProjectAveryCommon.ExtensionMethods;
-using ProjectAveryFrontend.Logic.Services.HttpsClients;
+using ForkCommon.ExtensionMethods;
+using ForkFrontend.Logic.Services.HttpsClients;
 
-namespace ProjectAveryFrontend.Logic.Services.Connections;
+namespace ForkFrontend.Logic.Services.Connections;
 
 public abstract class AbstractConnectionService
 {

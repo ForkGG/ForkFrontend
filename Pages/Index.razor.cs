@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Components;
-using ProjectAveryCommon.Model.Entity.Pocos;
-using ProjectAveryFrontend.Logic.Services.Connections;
-using ProjectAveryFrontend.Logic.Services.Managers;
-using ProjectAveryFrontend.Logic.Services.Notifications;
+using ForkCommon.Model.Entity.Pocos;
+using ForkFrontend.Logic.Services.Connections;
+using ForkFrontend.Logic.Services.Managers;
+using ForkFrontend.Logic.Services.Notifications;
 
-namespace ProjectAveryFrontend.Pages;
+namespace ForkFrontend.Pages;
 
 // This Page controls the whole entity logic
 public partial class Index : ComponentBase

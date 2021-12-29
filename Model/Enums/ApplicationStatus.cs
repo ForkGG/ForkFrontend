@@ -1,4 +1,4 @@
-﻿namespace ProjectAveryFrontend.Model;
+﻿namespace ForkFrontend.Model;
 
 public enum ApplicationStatus
 {

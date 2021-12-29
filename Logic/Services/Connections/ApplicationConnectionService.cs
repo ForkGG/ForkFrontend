@@ -1,8 +1,8 @@
-﻿using ProjectAveryCommon.ExtensionMethods;
-using ProjectAveryCommon.Model.Application;
-using ProjectAveryFrontend.Logic.Services.HttpsClients;
+﻿using ForkCommon.ExtensionMethods;
+using ForkCommon.Model.Application;
+using ForkFrontend.Logic.Services.HttpsClients;
 
-namespace ProjectAveryFrontend.Logic.Services.Connections;
+namespace ForkFrontend.Logic.Services.Connections;
 
 public class ApplicationConnectionService : AbstractConnectionService, IApplicationConnectionService
 {

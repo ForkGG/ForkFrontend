@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 
-namespace ProjectAveryFrontend.Logic.Utility.Logging;
+namespace ForkFrontend.Logic.Utility.Logging;
 
 public static class LoggingBuilderForkExtensions
 {

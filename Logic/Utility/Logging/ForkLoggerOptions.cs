@@ -1,4 +1,4 @@
-﻿namespace ProjectAveryFrontend.Logic.Utility.Logging;
+﻿namespace ForkFrontend.Logic.Utility.Logging;
 
 public class ForkLoggerOptions
 {

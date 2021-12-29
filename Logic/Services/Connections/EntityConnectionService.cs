@@ -1,8 +1,8 @@
-﻿using ProjectAveryCommon.Model.Entity.Transient.Console;
-using ProjectAveryCommon.Model.Payloads.Entity;
-using ProjectAveryFrontend.Logic.Services.HttpsClients;
+﻿using ForkCommon.Model.Entity.Transient.Console;
+using ForkCommon.Model.Payloads.Entity;
+using ForkFrontend.Logic.Services.HttpsClients;
 
-namespace ProjectAveryFrontend.Logic.Services.Connections;
+namespace ForkFrontend.Logic.Services.Connections;
 
 public class EntityConnectionService : AbstractConnectionService, IEntityConnectionService
 {

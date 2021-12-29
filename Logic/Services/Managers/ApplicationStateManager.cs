@@ -1,8 +1,8 @@
-﻿using ProjectAveryCommon.Model.Application;
-using ProjectAveryFrontend.Logic.Services.Connections;
-using ProjectAveryFrontend.Model;
+﻿using ForkCommon.Model.Application;
+using ForkFrontend.Logic.Services.Connections;
+using ForkFrontend.Model;
 
-namespace ProjectAveryFrontend.Logic.Services.Managers;
+namespace ForkFrontend.Logic.Services.Managers;
 
 public class ApplicationStateManager : IApplicationStateManager
 {

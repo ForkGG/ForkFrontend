@@ -8,7 +8,7 @@
     }
   },
   "profiles": {
-    "ProjectAveryFrontend": {
+    "ForkFrontend": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": false,
