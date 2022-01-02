@@ -1,5 +1,8 @@
 ﻿@using ForkCommon.Model.Entity.Pocos
+@using ForkCommon.Model.Notifications.EntityNotifications
+@using ForkFrontend.Logic.Services.Notifications
 @inherits EntityTab
+@inject INotificationService _notificationService
 
 <div class="flex-1 flex bg-forkBlue gap-4 p-4 overflow-hidden">
     @* Center Part *@
@@ -21,15 +24,15 @@
 
     @* Hardware Stats *@
     <div class="flex flex-col gap-4 overflow-auto scroll-hidden">
-        <PerformanceMonitor Content="30" SubTitle="%" Name="CPU" Color="Green"></PerformanceMonitor>
+        <PerformanceMonitor Content="@CpuPercentage.ToString()" SubTitle="%" Name="CPU" ColorIntensity="@(Math.Min(CpuPercentage - CpuPercentage % 10, 100))"></PerformanceMonitor>
         <div class="performance-container">
-            <PerformanceMonitor Content="2" SubTitle="%" Name="RAM" Color="Green"></PerformanceMonitor>
+            <PerformanceMonitor Content="@MemoryPercentage.ToString()" SubTitle="%" Name="RAM" ColorIntensity="@(Math.Min(MemoryPercentage - MemoryPercentage % 10, 100))"></PerformanceMonitor>
             <div class="flex text-forkBlue-highlighted text-xs cursor-pointer">
                 <span>2048 MB</span>
                 <span class="leading-none ml-1">...</span>
             </div>
         </div>
-        <PerformanceMonitor Content="59:59" SubTitle="H:M" Name="UP<br>TIME" Color="Green"></PerformanceMonitor>
+        <PerformanceMonitor Content="@($"{Uptime.TotalHours:00}:{Uptime.Minutes:00}")" SubTitle="H:M" Name="UP<br>TIME" ColorIntensity="0"></PerformanceMonitor>
     </div>
 </div>
 
@@ -38,4 +41,24 @@
     [CascadingParameter]
     public IEntity? Entity { get; set; }
 
+    private int CpuPercentage { get; set; } = 0;
+    private int MemoryPercentage { get; set; } = 0;
+    private TimeSpan Uptime { get; set; } = TimeSpan.Zero;
+
+    protected override void OnInitialized()
+    {
+        _notificationService.Register<EntityPerformanceNotification>(HandlePerformanceNotification);
+    }
+
+    private Task HandlePerformanceNotification(EntityPerformanceNotification performanceNotification)
+    {
+        if(performanceNotification.EntityId != Entity?.Id)
+            return Task.CompletedTask;
+        
+        CpuPercentage = (int) performanceNotification.CpuPercentage;
+        MemoryPercentage = (int) performanceNotification.RamPercentage;
+        Uptime = performanceNotification.Uptime;
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
 }

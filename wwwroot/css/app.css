@@ -88,7 +88,6 @@
         @apply h-20;
         @apply rounded-full;
         @apply bg-opacity-20 !important;
-        @apply bg-status-green;
     }
 
     .console-text > div {

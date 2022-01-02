@@ -1,16 +1,30 @@
 module.exports = {
-    purge: {
-        enabled: false,
-        content: [
-            './**/*.html',
-            './**/*.razor',
-            './**/*.razor.css'
-        ],
-        safelist: [
-            'active'
-        ]
-    },
-    darkMode: false, // or 'media' or 'class'
+    mode: 'jit',
+    content: [
+        './**/*.html',
+        './**/*.razor',
+        './**/*.razor.css'
+    ],
+    safelist: [
+        {
+            pattern: /(bg|text)-percentage-p(|1|2|3|4|5|6|7|8|9|10)0/,
+            variants: ['before']
+        },
+        {
+            pattern: /text-.*/,
+            variants: ['hover']
+        },
+        {
+            pattern: /-my-.*/
+        },
+        {
+            pattern: /.*visible/
+        },
+        {
+            pattern: /bg-status-.*/
+        }
+    ],
+    //darkMode: false, // or 'media' or 'class'
     theme: {
         fontSize: {
             'xs': '8pt',
@@ -63,6 +77,19 @@ module.exports = {
                     hover: '#313549',
                     active: '#3b4059'
                 }
+            },
+            percentage: {
+                p0: '#374FC3',
+                p10: '#50CE61',
+                p20: '#6DC856',
+                p30: '#92C05E',
+                p40: '#ABC757',
+                p50: '#CEC450',
+                p60: '#CEA150',
+                p70: '#CE8B50',
+                p80: '#B7684A',
+                p90: '#CE6150',
+                p100: '#CE5050',
             }
         },
         extend: {},
