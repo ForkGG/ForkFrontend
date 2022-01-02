@@ -4,6 +4,7 @@
   "description": "",
   "dependencies": {
     "autoprefixer": "^10.4.0",
+    "cssnano": "^5.0.14",
     "node": "^14.18.2",
     "postcss": "^8.4.4",
     "postcss-cli": "^8.3.1",
