@@ -33,4 +33,11 @@ public class ApplicationConnectionService : AbstractConnectionService, IApplicat
             return new State();
         }
     }
+
+    public async Task<string> GetIpAddress()
+    {
+        _logger.LogDebug("Getting servers external Ip address");
+        var responseMessage = await _client.GetAsync("/v1/application/ip");
+        return await responseMessage.Content.ReadAsStringAsync();
+    }
 }

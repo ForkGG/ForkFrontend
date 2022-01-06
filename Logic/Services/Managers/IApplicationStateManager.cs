@@ -13,6 +13,7 @@ public interface IApplicationStateManager
     public State ApplicationState { get; }
     public WebsocketStatus WebsocketStatus { get; set; }
     public ApplicationStatus ApplicationStatus { get; }
+    public string ForkExternalIp { get; }
 
     public event HandleAppStatusChanged AppStatusChanged;
     public event HandleAppStateChanged AppStateChanged;

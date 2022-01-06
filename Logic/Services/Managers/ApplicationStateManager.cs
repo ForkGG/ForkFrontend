@@ -23,6 +23,7 @@ public class ApplicationStateManager : IApplicationStateManager
     public event IApplicationStateManager.HandleAppStateChanged? AppStateChanged;
     public bool IsApplicationReady => _isStateReady && WebsocketStatus == WebsocketStatus.Connected;
     public State ApplicationState { get; private set; }
+    public string ForkExternalIp { get; private set; }
 
     public WebsocketStatus WebsocketStatus
     {
@@ -44,11 +45,13 @@ public class ApplicationStateManager : IApplicationStateManager
         }
     }
 
+
     public async Task UpdateState()
     {
         _isStateReady = false;
         _logger.LogInformation("Refreshing application state...");
         ApplicationState = await _applicationConnection.GetApplicationState();
+        ForkExternalIp = await _applicationConnection.GetIpAddress();
         _isStateReady = true;
         AppStatusChanged?.Invoke();
         AppStateChanged?.Invoke();

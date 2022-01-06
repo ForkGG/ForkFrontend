@@ -1,8 +1,10 @@
 ﻿@using ForkCommon.Model.Entity.Pocos
 @using ForkCommon.Model.Notifications.EntityNotifications
+@using ForkFrontend.Logic.Services.Managers
 @using ForkFrontend.Logic.Services.Notifications
 @inherits EntityTab
 @inject INotificationService _notificationService
+@inject IApplicationStateManager _application
 
 <div class="flex-1 flex bg-forkBlue gap-4 p-4 overflow-hidden">
     @* Center Part *@
@@ -17,7 +19,7 @@
         <div class="ip-container clipping h-12 max-w-max">
             <div class="flex h-full">
                 <span class="text-xs text-label py-1">IP Address</span>
-                <span class="mx-8 self-center text-text monospace">192.168.999.1:25565</span>
+                <span class="mx-8 self-center text-text monospace">@BuildIpString()</span>
             </div>
         </div>
     </div>
@@ -60,5 +62,17 @@
         Uptime = performanceNotification.Uptime;
         StateHasChanged();
         return Task.CompletedTask;
+    }
+
+    private string BuildIpString()
+    {
+        string ip = _application.ForkExternalIp;
+        if (Entity is Server server)
+        {
+            return $"{ip}:{server.VanillaSettings.ServerPort}";
+        } 
+        // TODO Add network support
+        // Network.Port;
+        return ip;
     }
 }
