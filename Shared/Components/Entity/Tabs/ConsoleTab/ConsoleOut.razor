@@ -4,10 +4,10 @@
 @using ForkCommon.Model.Entity.Transient.Console
 @using ForkCommon.Model.Notifications.EntityNotifications
 @using ForkCommon.Model.Entity.Enums.Console
+@using ForkFrontend.Logic.Services.Managers
 @implements IAsyncDisposable
 
 @inject IJSRuntime _js
-@inject INotificationService _notificationService
 @inject ILogger<ConsoleOut> _logger
 @inject IEntityConnectionService _entityConnection
 
@@ -24,8 +24,8 @@
 
     @* Console *@
     <div class="flex-1">
-        <div id="@($"consoleScrollArea{Entity?.Id}")" class="clusterize-scroll p-3 overflow-ellipsis text-text overflow-y-auto max-h-full select-text" @ref="_consoleScroller" @onscroll="OnConsoleScroll">
-            <div id="@($"consoleContentArea{Entity?.Id}")" class="clusterize-content console-text" @ref="_consoleContent">
+        <div id="@($"consoleScrollArea{EntityState?.Entity.Id}")" class="clusterize-scroll p-3 overflow-ellipsis text-text overflow-y-auto max-h-full select-text" @ref="_consoleScroller" @onscroll="OnConsoleScroll">
+            <div id="@($"consoleContentArea{EntityState?.Entity.Id}")" class="clusterize-content console-text" @ref="_consoleContent">
                 <div class="clusterize-no-data">Loading Console...</div>
             </div>
         </div>
@@ -35,9 +35,7 @@
 @code {
 
     [CascadingParameter]
-    public IEntity? Entity { get; set; }
-
-    private List<ConsoleMessage> ConsoleMessages { get; set; } = new();
+    public EntityStateManager? EntityState { get; set; }
 
     private ElementReference _consoleScroller;
     private ElementReference _consoleContent;
@@ -47,7 +45,7 @@
 
     protected override void OnInitialized()
     {
-        _notificationService.Register<ConsoleAddNotification>(async notification => { await HandleNewConsoleLine(notification); });
+        EntityState!.ConsoleAddNotificationHandler.After += HandleNewConsoleLine;
     }
 
 
@@ -58,8 +56,8 @@
         if (_isFirstRender)
         {
             _isFirstRender = false;
-            ConsoleMessages = await _entityConnection.GetConsoleMessagesAsync(Entity!.Id);
-            await _js.InvokeVoidAsync("InitConsoleClusterize", ConsoleMessages.Select(ConsoleMessageToHtml).ToList(), _consoleScroller, _consoleContent);
+            EntityState!.Entity.ConsoleMessages = await _entityConnection.GetConsoleMessagesAsync(EntityState!.Entity.Id);
+            await _js.InvokeVoidAsync("InitConsoleClusterize", EntityState!.Entity.ConsoleMessages.Select(ConsoleMessageToHtml).ToList(), _consoleScroller, _consoleContent);
 
     // Scroll to bottom
             await ScrollToBottom();
@@ -73,18 +71,12 @@
     // It is important to clean up here else we have too many Registered handlers and NullPointers in JS
     public async ValueTask DisposeAsync()
     {
-        _notificationService.Unregister<ConsoleAddNotification>(this);
+        EntityState!.ConsoleAddNotificationHandler.After -= HandleNewConsoleLine;
         await _js.InvokeVoidAsync("DestroyConsoleCluster", _consoleScroller);
     }
 
     private async Task HandleNewConsoleLine(ConsoleAddNotification notification)
     {
-    // Skip notifications not matching the id
-        if (notification.EntityId != Entity?.Id)
-        {
-            return;
-        }
-        ConsoleMessages.Add(notification.NewConsoleMessage);
         await _js.InvokeVoidAsync("AppendToConsole", ConsoleMessageToHtml(notification.NewConsoleMessage), _consoleScroller);
         StateHasChanged();
         if (_autoscroll)

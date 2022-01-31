@@ -7,19 +7,17 @@
     {
         <div class="flex flex-1 mx-6 my-10 gap-10 overflow-hidden">
             @* Sidebar *@
-            <CascadingValue Name="@nameof(_applicationState.ApplicationState.Entities)" Value="_applicationState.ApplicationState.Entities">
-                <CascadingValue Name="@nameof(SelectedEntity)" Value="SelectedEntity">
-                    <Sidebar OnSelectEntity="OnSelectEntity"/>
-                </CascadingValue>
+            <CascadingValue Name="@nameof(SelectedEntity)" Value="SelectedEntity">
+                <Sidebar OnSelectEntity="OnSelectEntity" EntityManagers="_applicationState.EntityStateManagersById"/>
             </CascadingValue>
             @* Content *@
             <div class="flex-1">
-                @if (_applicationState.ApplicationState.Entities.Count > 0)
+                @if (_applicationState.EntityStateManagersById.Count > 0)
                 {
-                    foreach (var entity in _applicationState.ApplicationState.Entities)
+                    foreach (var entity in _applicationState.EntityStateManagersById)
                     {
-                        <div class="@(entity == SelectedEntity ? "h-full" : "hidden")">
-                            <Entity @key="@entity.Id" Value="entity"></Entity>
+                        <div class="@(entity.Key == SelectedEntity?.Id ? "h-full" : "hidden")">
+                            <Entity @key="@entity.Key" Value="entity.Value"></Entity>
                         </div>
                     }
                 }

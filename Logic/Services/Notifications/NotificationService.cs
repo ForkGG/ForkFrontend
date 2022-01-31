@@ -9,22 +9,32 @@ using ForkFrontend.Model;
 
 namespace ForkFrontend.Logic.Services.Notifications;
 
-public class ApplicationNotificationService : INotificationService
+public class NotificationService : INotificationService
 {
     private const int BUFFER_SIZE = 2048;
-
-    private readonly IApplicationStateManager _applicationState;
+    
     private readonly CancellationTokenSource _cancellationTokenSource;
-    private readonly ILogger<ApplicationNotificationService> _logger;
+    private readonly ILogger<NotificationService> _logger;
     private readonly Uri _webSocketUri = new("ws://localhost:35566");
     private ClientWebSocket? _webSocket;
 
-    public ApplicationNotificationService(ILogger<ApplicationNotificationService> logger,
-        IApplicationStateManager applicationState)
+    private WebsocketStatus _websocketStatus = WebsocketStatus.Disconnected;
+
+    private WebsocketStatus WebsocketStatus
+    {
+        get => _websocketStatus;
+        set
+        {
+            _websocketStatus = value;
+            WebsocketStatusChanged?.Invoke(value);
+        }
+    }
+    public event INotificationService.WebsocketStatusChangedHandler? WebsocketStatusChanged;
+
+    public NotificationService(ILogger<NotificationService> logger)
     {
         logger.LogInformation("Initializing NotificationService");
         _logger = logger;
-        _applicationState = applicationState;
         _cancellationTokenSource = new CancellationTokenSource();
         RegisteredHandlers = new List<INotificationHandler>();
     }
@@ -65,7 +75,7 @@ public class ApplicationNotificationService : INotificationService
             {
                 IAsyncEnumerable<string> messages = ConnectAsync(_cancellationTokenSource.Token);
                 await foreach (string message in messages) await HandleMessage(message);
-                _applicationState.WebsocketStatus = WebsocketStatus.Disconnected;
+                WebsocketStatus = WebsocketStatus.Disconnected;
                 _logger.LogDebug("Websocket closed. Reconnecting in 500ms");
                 _webSocket.Abort();
                 _webSocket.Dispose();
@@ -103,8 +113,7 @@ public class ApplicationNotificationService : INotificationService
     {
         if (_webSocket == null) yield break;
         await _webSocket.ConnectAsync(_webSocketUri, cancellationToken);
-        _applicationState.WebsocketStatus = WebsocketStatus.Connected;
-        await _applicationState.UpdateState();
+        WebsocketStatus = WebsocketStatus.Connected;
         // TODO CKE actual token
         await SendMessageAsync("dummyToken", cancellationToken);
         var buffer = new ArraySegment<byte>(new byte[BUFFER_SIZE]);
@@ -130,7 +139,7 @@ public class ApplicationNotificationService : INotificationService
 
     private async Task SendMessageAsync(string message, CancellationToken cancellationToken)
     {
-        if (_applicationState.WebsocketStatus != WebsocketStatus.Connected)
+        if (WebsocketStatus != WebsocketStatus.Connected)
         {
             _logger.LogError($"Failed to write WebSocket message. WebSocket is not connected!\n{message}");
             return;

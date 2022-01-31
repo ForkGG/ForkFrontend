@@ -3,6 +3,7 @@
 @using ForkCommon.Model.Entity.Pocos.ServerSettings
 @using ForkCommon.Model.Payloads.Entity
 @using ForkCommon.Model.Entity.Enums
+@using ForkFrontend.Logic.Services.Managers
 @inject ILogger<Sidebar> _logger
 @inject IEntityConnectionService _entityConnection
 
@@ -25,11 +26,11 @@
     <div class="bg-forkBlue-light flex-1 mt-5 flex flex-col">
         @* Server *@
         <div class="flex-1 overflow-y-auto scroll-left">
-            @if (Entities != null)
+            @if (EntityManagers != null)
             {
-                @foreach (var entity in Entities)
+                @foreach (var entityManager in EntityManagers)
                 {
-                    <SidebarEntity Value="@entity" OnClickCallback="OnSelectEntity" IsSelected="@(SelectedEntity == entity)"></SidebarEntity>
+                    <SidebarEntity Value="@entityManager.Value" OnClickCallback="OnSelectEntity" IsSelected="@(SelectedEntity?.Id == entityManager.Key)"></SidebarEntity>
                 }
             }
         </div>
@@ -47,8 +48,8 @@
     [Parameter]
     public EventCallback<IEntity> OnSelectEntity { get; set; }
 
-    [CascadingParameter(Name = nameof(Entities))]
-    public List<IEntity>? Entities { get; set; }
+    [Parameter]
+    public Dictionary<ulong, EntityStateManager>? EntityManagers { get; set; }
 
     [CascadingParameter(Name = nameof(SelectedEntity))]
     public IEntity? SelectedEntity { get; set; }

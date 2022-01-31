@@ -22,7 +22,7 @@ builder.Services.AddHttpClient<LocalClient>(client =>
 builder.Services.AddSingleton<IApplicationConnectionService, ApplicationConnectionService>();
 builder.Services.AddSingleton<IEntityConnectionService, EntityConnectionService>();
 builder.Services.AddSingleton<ITranslationService, DefaultTranslationService>();
-builder.Services.AddSingleton<INotificationService, ApplicationNotificationService>();
+builder.Services.AddSingleton<INotificationService, NotificationService>();
 
 builder.Services.AddSingleton<IApplicationStateManager, ApplicationStateManager>();
 

@@ -3,6 +3,7 @@
 @using ForkCommon.Model.Entity.Pocos.Player
 @using ForkCommon.Model.Notifications.EntityNotifications.PlayerNotifications
 @using ForkCommon.Model.Entity.Enums.Player
+@using ForkFrontend.Logic.Services.Managers
 @implements ISimplePlayerlist
 @inject INotificationService _notificationService
 <div class="h-full bg-forkBlue pt-3">
@@ -26,9 +27,9 @@
 @code {
 
     [CascadingParameter]
-    public IEntity? Entity { get; set; }
+    public EntityStateManager? EntityState { get; set; }
 
-    private Server? Server => Entity as Server;
+    private Server? Server => EntityState?.Entity as Server;
 
     public Player? ActivePlayer { get; set; }
 
@@ -40,37 +41,7 @@
 
     protected override void OnInitialized()
     {
-        _notificationService.Register<UpdateWhitelistPlayerNotification>(HandlePlayerUpdate);
-    }
-
-    private async Task HandlePlayerUpdate(UpdateWhitelistPlayerNotification notification)
-    {
-        if (Server == null || notification.EntityId != Server.Id)
-            return;
-        Server.Whitelist ??= new List<Player>();
-
-        if (notification.UpdateType == PlayerlistUpdateType.Remove)
-        {
-            Server.Whitelist.RemoveAll(p => p.Uid == notification.Player.Uid);
-        }
-        else
-        {
-            var existing = Server.Whitelist.FirstOrDefault(p => p.Uid == notification.Player.Uid);
-    // Update
-            if (existing != null)
-            {
-                existing.Head = notification.Player.Head;
-                existing.Name = notification.Player.Name;
-                existing.LastUpdated = notification.Player.LastUpdated;
-                existing.IsOfflinePlayer = notification.Player.IsOfflinePlayer;
-            }
-    // Add
-            else
-            {
-                Server.Whitelist.Add(notification.Player);
-            }
-        }
-        StateHasChanged();
+        EntityState!.UpdateWhitelistPlayerNotificationHandler.After += async _ => StateHasChanged();
     }
 
 }

@@ -2,7 +2,7 @@
 @using ForkCommon.Model.Entity.Pocos
 @using ForkCommon.Model.Entity.Pocos.Player
 @using ForkCommon.Model.Notifications.EntityNotifications.PlayerNotifications
-@inject INotificationService _notificationService
+@using ForkFrontend.Logic.Services.Managers
 <div class="h-full bg-forkBlue pt-3">
     @* Player count *@
     <span class="px-7 py-3 text-label-hover">@(Server?.ServerPlayers?.Count(p => p.IsOnline) ?? 0) / @(Server?.VanillaSettings?.MaxPlayers ?? 0) - Online</span>
@@ -25,9 +25,9 @@
 @code {
 
     [CascadingParameter]
-    public IEntity? Entity { get; set; }
+    public EntityStateManager? EntityState { get; set; }
 
-    private Server? Server => Entity as Server;
+    private Server? Server => EntityState?.Entity as Server;
 
     public ServerPlayer? ActivePlayer { get; set; }
 
@@ -39,25 +39,13 @@
 
     protected override void OnInitialized()
     {
-        _notificationService.Register<UpdatePlayerNotification>(HandlePlayerUpdate);
+        EntityState!.UpdatePlayerNotificationHandler.After += HandlePlayerUpdate;
     }
 
-    private async Task HandlePlayerUpdate(UpdatePlayerNotification notification)
+    private Task HandlePlayerUpdate(UpdatePlayerNotification notification)
     {
-        if (Server?.ServerPlayers == null || notification.EntityId != Server.Id)
-            return;
-
-        var existing = Server?.ServerPlayers.FirstOrDefault(p => p.Player.Uid == notification.ServerPlayer.Player.Uid);
-        if (existing != null)
-        {
-            existing.IsOnline = notification.ServerPlayer.IsOnline;
-            existing.IsOp = notification.ServerPlayer.IsOp;
-        }
-        else
-        {
-            Server?.ServerPlayers.Add(notification.ServerPlayer);
-        }
         StateHasChanged();
+        return Task.CompletedTask;
     }
 
 }

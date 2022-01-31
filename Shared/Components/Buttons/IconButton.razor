@@ -1,4 +1,8 @@
-﻿<div style="@SizeString" class="icon-button cursor-pointer @($"hover:text-{HoverColor}") @(NoBackground ? "text-text-dark" : "text-text-darkest bg-button") flex justify-center items-center" @onclick="ClickHandler">
+﻿<div style="@SizeString"
+     class="@(IsDisabled ? "opacity-50" : $"cursor-pointer hover:text-{HoverColor}")
+        @(NoBackground ? "text-text-dark" : "text-text-darkest bg-button") 
+        icon-button flex justify-center items-center"
+     @onclick="ClickHandler">
     <span class="icon" style="font-size: @IconSizeString">@IconChar</span>
 </div>
 
@@ -27,11 +31,19 @@
     [Parameter]
     public string HoverColor { get; set; } = "label-hover";
 
+    [Parameter]
+    public bool IsDisabled { get; set; }
+
     private string SizeString => Size.HasValue ? $"width: {Size}px; height: {Size}px;" : "";
+
+    public new void StateHasChanged()
+    {
+        base.StateHasChanged();
+    }
 
     private async Task ClickHandler()
     {
-        if (OnClickMethod.HasDelegate)
+        if (!IsDisabled && OnClickMethod.HasDelegate)
         {
             await OnClickMethod.InvokeAsync(this);
         }

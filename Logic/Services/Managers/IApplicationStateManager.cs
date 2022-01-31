@@ -14,6 +14,7 @@ public interface IApplicationStateManager
     public WebsocketStatus WebsocketStatus { get; set; }
     public ApplicationStatus ApplicationStatus { get; }
     public string ForkExternalIp { get; }
+    public Dictionary<ulong, EntityStateManager> EntityStateManagersById { get; }
 
     public event HandleAppStatusChanged AppStatusChanged;
     public event HandleAppStateChanged AppStateChanged;

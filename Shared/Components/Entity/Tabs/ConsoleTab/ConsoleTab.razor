@@ -3,7 +3,6 @@
 @using ForkFrontend.Logic.Services.Managers
 @using ForkFrontend.Logic.Services.Notifications
 @inherits EntityTab
-@inject INotificationService _notificationService
 @inject IApplicationStateManager _application
 
 <div class="flex-1 flex bg-forkBlue gap-4 p-4 overflow-hidden">
@@ -41,7 +40,7 @@
 @code {
 
     [CascadingParameter]
-    public IEntity? Entity { get; set; }
+    public EntityStateManager? EntityState { get; set; }
 
     private int CpuPercentage { get; set; } = 0;
     private int MemoryPercentage { get; set; } = 0;
@@ -49,14 +48,11 @@
 
     protected override void OnInitialized()
     {
-        _notificationService.Register<EntityPerformanceNotification>(HandlePerformanceNotification);
+        EntityState!.EntityPerformanceNotificationHandler.After += HandlePerformanceNotification;
     }
 
     private Task HandlePerformanceNotification(EntityPerformanceNotification performanceNotification)
     {
-        if(performanceNotification.EntityId != Entity?.Id)
-            return Task.CompletedTask;
-        
         CpuPercentage = (int) performanceNotification.CpuPercentage;
         MemoryPercentage = (int) performanceNotification.RamPercentage;
         Uptime = performanceNotification.Uptime;
@@ -67,7 +63,7 @@
     private string BuildIpString()
     {
         string ip = _application.ForkExternalIp;
-        if (Entity is Server server)
+        if (EntityState?.Entity is Server server)
         {
             return $"{ip}:{server.VanillaSettings.ServerPort}";
         } 

@@ -1,18 +1,19 @@
 ﻿@using ForkFrontend.Logic.Services.Notifications
 @using ForkCommon.Model.Entity.Pocos
 @using ForkCommon.Model.Notifications.EntityNotifications
+@using ForkFrontend.Logic.Services.Managers
 @inject ILogger<SidebarEntity> _logger
 @inject INotificationService _notificationService
 
 <div class="@(IsSelected ? "bg-forkBlue-hover text-label-hover" : "text-label hover:text-label-hover") w-full flex items-center py-3 pl-5 cursor-pointer" @onclick="OnSelectEntity">
     @* Status *@
-    <StatusIndicator Status="Value.Status"></StatusIndicator>
+    <StatusIndicator Status="Value!.Entity.Status"></StatusIndicator>
     @* Icon *@
     <span class="icon px-3 text-2xl">2</span>
     @* Content *@
     <div class="flex-1">
-        <p class="text-md">@Value.Name</p>
-        @if (Value is Server server)
+        <p class="text-md">@Value?.Entity.Name</p>
+        @if (Value?.Entity is Server server)
         {
             <p class="text-sm">@(server.ServerPlayers?.Count(p => p.IsOnline) ?? 0) / @(server.VanillaSettings?.MaxPlayers ?? 0)</p>
         }
@@ -25,7 +26,7 @@
 
     [Parameter]
     [EditorRequired]
-    public IEntity Value { get; set; }
+    public EntityStateManager? Value { get; set; }
 
     [Parameter]
     [EditorRequired]
@@ -36,7 +37,8 @@
 
     protected override Task OnInitializedAsync()
     {
-        _notificationService.Register<EntityStatusChangedNotification>(async notification => { await HandleEntityStatusChanged(notification); });
+        Value!.EntityStatusChangedNotificationHandler.After += async _ => StateHasChanged();
+        Value!.UpdatePlayerNotificationHandler.After += async _ => StateHasChanged();
         return base.OnInitializedAsync();
     }
 
@@ -44,18 +46,8 @@
     {
         if (OnClickCallback.HasDelegate)
         {
-            await OnClickCallback.InvokeAsync(Value);
+            await OnClickCallback.InvokeAsync(Value?.Entity);
         }
-    }
-
-    private Task HandleEntityStatusChanged(EntityStatusChangedNotification statusChangedNotification)
-    {
-        if (Value.Id != statusChangedNotification.EntityId)
-            return Task.CompletedTask;
-
-        Value.Status = statusChangedNotification.NewEntityStatus;
-        StateHasChanged();
-        return Task.CompletedTask;
     }
 
 }
