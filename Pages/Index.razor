@@ -8,10 +8,14 @@
         <div class="flex flex-1 mx-6 my-10 gap-10 overflow-hidden">
             @* Sidebar *@
             <CascadingValue Name="@nameof(SelectedEntity)" Value="SelectedEntity">
-                <Sidebar OnSelectEntity="OnSelectEntity" EntityManagers="_applicationState.EntityStateManagersById"/>
+                <Sidebar Parent="this" OnSelectEntity="OnSelectEntity" EntityManagers="_applicationState.EntityStateManagersById"/>
             </CascadingValue>
             @* Content *@
             <div class="flex-1">
+                @if (_openScreen != null)
+                {
+                    <DynamicComponent Type="_openScreen.GetType()"></DynamicComponent>
+                }
                 @if (_applicationState.EntityStateManagersById.Count > 0)
                 {
                     foreach (var entity in _applicationState.EntityStateManagersById)
@@ -23,7 +27,7 @@
                 }
                 else
                 {
-                @* TODO CKE Welcome Screen if no server exists *@
+                        @* TODO CKE Welcome Screen if no server exists *@
                     <div></div>
                 }
             </div>
@@ -38,8 +42,3 @@
     }
 
 </div>
-
-
-@code {
-
-}

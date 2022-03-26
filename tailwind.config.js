@@ -1,9 +1,10 @@
 module.exports = {
-    mode: 'jit',
     content: [
-        './**/*.html',
-        './**/*.razor',
-        './**/*.razor.css'
+        './Pages/**/*.html',
+        './Pages/**/*.razor',
+        './Shared/**/*.html',
+        './Shared/**/*.razor',
+        './wwwroot/index.html',
     ],
     safelist: [
         {

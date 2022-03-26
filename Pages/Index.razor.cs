@@ -3,6 +3,8 @@ using ForkCommon.Model.Entity.Pocos;
 using ForkFrontend.Logic.Services.Connections;
 using ForkFrontend.Logic.Services.Managers;
 using ForkFrontend.Logic.Services.Notifications;
+using ForkFrontend.Shared.Components.Screens;
+using ForkFrontend.Shared.Components.Screens.CreateEntity;
 
 namespace ForkFrontend.Pages;
 
@@ -13,7 +15,22 @@ public partial class Index : ComponentBase
     [Inject] private IApplicationStateManager ApplicationStateManager { get; set; }
     [Inject] private INotificationService NotificationService { get; set; }
 
+    // Screens can be shown instead of entities (add entity, Fork settings, ...)
+    private AbstractScreenComponent? _openScreen;
+    
     public IEntity? SelectedEntity { get; set; }
+
+    public void OpenAddEntityScreen()
+    {
+        _openScreen = new CreateEntityScreen();
+        SelectedEntity = null;
+        StateHasChanged();
+    }
+
+    public void CloseAddEntityScreen()
+    {
+        _openScreen = null;
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -33,5 +50,7 @@ public partial class Index : ComponentBase
     private async Task OnSelectEntity(IEntity entity)
     {
         SelectedEntity = entity;
+        _openScreen = null;
+        StateHasChanged();
     }
 }

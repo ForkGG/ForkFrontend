@@ -12,7 +12,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "buildcss": "postcss wwwroot/css/app.css -o wwwroot/css/app.min.css"
+    "buildcss": "set TAILWIND_MODE=watch && postcss wwwroot/css/app.css -o wwwroot/css/app.min.css -w --verbose",
+    "tw": "npx tailwindcss -i wwwroot/css/app.css -o wwwroot/css/app.min.css --watch"
   },
   "repository": {
     "type": "git",

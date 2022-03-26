@@ -4,6 +4,7 @@
 @using ForkCommon.Model.Payloads.Entity
 @using ForkCommon.Model.Entity.Enums
 @using ForkFrontend.Logic.Services.Managers
+@using Index = ForkFrontend.Pages.Index
 @inject ILogger<Sidebar> _logger
 @inject IEntityConnectionService _entityConnection
 
@@ -38,13 +39,16 @@
         @* Controls *@
         <div class="flex justify-end gap-3 p-3">
             <IconButton IconChar="'I'" IconSize="24" Size="45"></IconButton>
-            <IconButton IconChar="'C'" IconSize="24" Size="45" OnClickMethod="CreateServerHandler"></IconButton>
+            <IconButton IconChar="'C'" IconSize="24" Size="45" OnClickMethod="OpenCreateEntityScreen"></IconButton>
         </div>
     </div>
 </div>
 
 @code
 {
+    [Parameter]
+    public Index? Parent { get; set; }
+    
     [Parameter]
     public EventCallback<IEntity> OnSelectEntity { get; set; }
 
@@ -57,6 +61,12 @@
     private void TestClickHandler(IconButton button)
     {
         Console.WriteLine(button.IconChar);
+    }
+
+    private Task OpenCreateEntityScreen(IconButton _)
+    {
+        Parent?.OpenAddEntityScreen();
+        return Task.CompletedTask;
     }
 
     private async Task CreateServerHandler(IconButton button)
