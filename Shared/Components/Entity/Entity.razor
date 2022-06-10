@@ -27,7 +27,7 @@
                         <IconButton @ref="_stopButton" IsDisabled="Value?.Entity.Status != EntityStatus.Started" Size="25" IconSize="9" IconChar="'h'" HoverColor="status-red" OnClickMethod="StopServer"></IconButton>
                         <IconButton @ref="_restartButton" IsDisabled="Value?.Entity.Status != EntityStatus.Started" Size="25" IconSize="13" IconChar="'r'" HoverColor="status-orange" OnClickMethod="RestartServer"></IconButton>
                     </div>
-                    <span class="font-bold text-md text-label whitespace-nowrap">@Value?.Entity.Name</span>
+                    <span class="font-bold text-md text-label whitespace-nowrap">@Value?.Entity</span>
                     <IconButton Size="30" NoBackground="true" IconChar="'D'" IconSize="19" HoverColor="status-red"></IconButton>
                 </div>
             </div>
@@ -129,6 +129,7 @@
 
     private Task HandleEntityStatusChange(EntityStatusChangedNotification notification)
     {
+        //TODO CKE FIXME Paramenters should not be set by parent but by child itself: https://stackoverflow.com/questions/58852101/bl0005-external-parameter-usage-why-is-a-warning-for-that
         if(_startButton != null)
         {
             _startButton.IsDisabled = notification.NewEntityStatus != EntityStatus.Stopped;

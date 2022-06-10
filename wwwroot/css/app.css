@@ -83,6 +83,14 @@
         min-height: 112px;
     }
 
+    .clip-bottom-right {
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%);
+    }
+
+    .clip-top-left {
+        clip-path: polygon(0 8px, 20px 8px, 30px 0, 100% 0, 100% 100%, 0 100%);
+    }
+
     .performance-circle::before {
         @apply w-20;
         @apply h-20;
@@ -158,6 +166,33 @@
 
     input[type='checkbox']:checked + span {
         @apply bg-forkBlue-highlighted !important
+    }
+
+    /* Select */
+    .select-wrapper {
+        position: relative;
+    }
+    .select-wrapper select{
+        clip-path: polygon(0 0, 100% 0, 100% 100%, calc(100% - 6px) 100%, calc(100% - 12px) calc(100% - 6px), calc(100% - 12px) 0, calc(100% - 18px) 0, calc(100% - 18px) calc(100% - 6px), calc(100% - 24px) 100%, 0 100%);
+        cursor: pointer;
+        padding-left: 1rem;
+        padding-right: 2rem;
+        outline: none;
+    }
+    .select-wrapper::after {
+        position: absolute;
+        content: ' ';
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: 12px;
+        clip-path: polygon(calc(50% - 3px) calc(50% - 3px), calc(50% + 3px) calc(50% - 3px), 50% calc(50% + 3px));
+        pointer-events: none;
+        @apply bg-text-dark;
+    }
+
+    .select-wrapper select option {
+        cursor: pointer;
     }
 }
 
